@@ -1,12 +1,13 @@
 package com.example.residents_meeting.vote.domain;
 
+import com.example.residents_meeting.common.BaseEntity;
 import com.example.residents_meeting.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
 @Getter
-public class Vote {
+public class Vote extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

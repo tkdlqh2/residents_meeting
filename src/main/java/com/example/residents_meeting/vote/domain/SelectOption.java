@@ -1,5 +1,6 @@
 package com.example.residents_meeting.vote.domain;
 
+import com.example.residents_meeting.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -7,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Getter
-public class SelectOption {
+public class SelectOption extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
