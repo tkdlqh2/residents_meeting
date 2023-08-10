@@ -35,14 +35,13 @@
 ### 투표 관련 ERD
 ```mermaid
 erDiagram
-    APARTMENT-MASTER ||--o{ AGENDA : makes
     AGENDA ||--|{ SELECT_OPTION : contains
     SELECT_OPTION ||--|{ VOTE : selected
-    HOUSE-MASTER ||--|{ VOTE   : votes
+    USER ||--|{ VOTE   : votes
 
     AGENDA {
         long id PK
-        string apartment_code FK
+        string apartment_code
         string title
         string details
         datetime vote_end_date
