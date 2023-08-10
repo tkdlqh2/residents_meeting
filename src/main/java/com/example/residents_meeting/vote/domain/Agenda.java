@@ -2,6 +2,7 @@ package com.example.residents_meeting.vote.domain;
 
 import com.example.residents_meeting.common.BaseEntity;
 import com.example.residents_meeting.vote.domain.dto.AgendaCreationDTO;
+import com.example.residents_meeting.vote.domain.dto.AgendaCreationResultDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -33,18 +34,20 @@ public class Agenda extends BaseEntity {
 	@Temporal(TemporalType.DATE)
 	private LocalDate endDate;
 
-	@OneToMany(mappedBy = "agenda", orphanRemoval = true)
+	@OneToMany(mappedBy = "agenda", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	private List<SelectOption> selectOptions;
 
 	private Agenda(String apartmentCode,
 				   String title,
 				   String details,
-				   LocalDate endDate,
-				   List<SelectOption> selectOptions) {
+				   LocalDate endDate) {
 		this.apartmentCode = apartmentCode;
 		this.title = title;
 		this.details = details;
 		this.endDate = endDate;
+	}
+
+	public void setSelectOptions(List<SelectOption> selectOptions) {
 		this.selectOptions = selectOptions;
 	}
 
@@ -52,9 +55,14 @@ public class Agenda extends BaseEntity {
 		return new Agenda(creationDTO.apartmentCode(),
 				creationDTO.title(),
 				creationDTO.details(),
-				creationDTO.endDate(),
-				creationDTO.selectOptionCreationDtoList()
-						.stream().map(SelectOption::from)
-						.toList());
+				creationDTO.endDate());
+	}
+
+	public AgendaCreationResultDTO toAgendaCreationResultDTO() {
+		return new AgendaCreationResultDTO(apartmentCode,
+				title,
+				details,
+				endDate,
+				selectOptions.stream().map(SelectOption::getSummary).toList());
 	}
 }
