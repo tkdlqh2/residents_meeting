@@ -19,5 +19,10 @@ public class Vote extends BaseEntity {
 	@ManyToOne(optional = false)
 	private User user;
 
+	public Vote(SelectOption selectOption, User user) {
+		this.selectOption = selectOption;
+		this.user = user;
+	}
 
+	public Vote() {}
 }
