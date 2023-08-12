@@ -31,10 +31,14 @@ public class SelectOption extends BaseEntity {
 	@OneToMany(mappedBy = "selectOption", orphanRemoval = true)
 	private List<Vote> votes;
 
-	private SelectOption(Agenda agenda, String summary, String details) {
+	protected SelectOption(Agenda agenda, String summary, String details) {
 		this.agenda = agenda;
 		this.summary = summary;
 		this.details = details;
+	}
+
+	protected void setId(Long id) {
+		this.id = id;
 	}
 
 	public static SelectOption from(Agenda agenda, SelectOptionCreationDto creationDto) {

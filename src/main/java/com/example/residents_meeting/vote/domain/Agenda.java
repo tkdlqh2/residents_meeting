@@ -37,7 +37,7 @@ public class Agenda extends BaseEntity {
 	@OneToMany(mappedBy = "agenda", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	private List<SelectOption> selectOptions;
 
-	private Agenda(String apartmentCode,
+	protected Agenda(String apartmentCode,
 				   String title,
 				   String details,
 				   LocalDate endDate) {
@@ -64,5 +64,9 @@ public class Agenda extends BaseEntity {
 				details,
 				endDate,
 				selectOptions.stream().map(SelectOption::getSummary).toList());
+	}
+
+	protected void setId(Long id) {
+		this.id = id;
 	}
 }

@@ -28,4 +28,22 @@ public class User extends BaseEntity {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private UserRole role;
+
+
+	public User() {
+	}
+	public User(String email, String password, String name, String phone, Address address, UserRole role) {
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.phone = phone;
+		this.address = address;
+		this.role = role;
+	}
+
+	protected void setId(Long id) {
+		this.id = id;
+	}
+
+
 }
