@@ -6,6 +6,8 @@ import com.example.residents_meeting.vote.domain.SelectOption;
 import com.example.residents_meeting.vote.domain.dto.VoteCreationDto;
 import com.example.residents_meeting.vote.domain.dto.VoteCreationResultDto;
 import com.example.residents_meeting.vote.domain.dto.VoteEvent;
+import com.example.residents_meeting.vote.exception.VoteException;
+import com.example.residents_meeting.vote.exception.VoteExceptionCode;
 import com.example.residents_meeting.vote.repository.SelectOptionRepository;
 import com.example.residents_meeting.vote.service.VoteService;
 import org.springframework.stereotype.Service;
@@ -27,13 +29,12 @@ public class VoteServiceImpl implements VoteService {
 	public VoteCreationResultDto createVote(VoteCreationDto voteCreationDto) {
 		SelectOption selectOption = selectOptionRepository.findByAgendaIdAndId(
 				voteCreationDto.agendaId(),
-				voteCreationDto.selectOptionId()
-				)
-				.orElseThrow(() -> new RuntimeException("Select option not found"));
+				voteCreationDto.selectOptionId())
+				.orElseThrow(() -> new VoteException(VoteExceptionCode.SELECT_OPTION_NOT_FOUND));
 
 		User user = requestContextHolder.getUser();
 		if (!user.getAddress().apartmentCode().equals(selectOption.getAgenda().getApartmentCode())) {
-			throw new RuntimeException("User not in apartment");
+			throw new VoteException(VoteExceptionCode.NO_RIGHT_FOR_VOTE);
 		}
 
 		VoteEvent voteEvent = new VoteEvent(selectOption.getId(), user.getId());
