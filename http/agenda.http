@@ -14,10 +14,14 @@ Content-Type: application/json
                                   ]
 }
 
-### 2. 투표
-POST {{root-url}}/api/vote/
+### 2. 안건 조회
+GET {{root-url}}/api/agenda/1
 Content-Type: application/json
 
+
+### 3. 투표
+POST {{root-url}}/api/vote/
+Content-Type: application/json
 {
         "agendaId": 1,
         "selectOptionId": 2
