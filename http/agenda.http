@@ -1,0 +1,24 @@
+
+### 1. 안건 생성
+POST {{root-url}}/api/agenda/
+Content-Type: application/json
+
+{
+    "apartmentCode": "A12345678",
+    "title": "제목",
+    "details": "설명",
+    "endDate": "2023-08-14",
+    "selectOptionCreationDtoList":[
+              {"summary":"찬성","details":"찬성입니다."},
+              {"summary":"반대","details":"반대입니다."}
+                                  ]
+}
+
+### 2. 투표
+POST {{root-url}}/api/vote/
+Content-Type: application/json
+
+{
+        "agendaId": 1,
+        "selectOptionId": 2
+}
