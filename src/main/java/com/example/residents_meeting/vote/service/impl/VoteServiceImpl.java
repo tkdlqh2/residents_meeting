@@ -6,9 +6,11 @@ import com.example.residents_meeting.vote.domain.SelectOption;
 import com.example.residents_meeting.vote.domain.dto.VoteCreationDto;
 import com.example.residents_meeting.vote.domain.dto.VoteCreationResultDto;
 import com.example.residents_meeting.vote.domain.dto.VoteEvent;
+import com.example.residents_meeting.vote.domain.dto.VoteHistory;
 import com.example.residents_meeting.vote.exception.VoteException;
 import com.example.residents_meeting.vote.exception.VoteExceptionCode;
 import com.example.residents_meeting.vote.repository.SelectOptionRepository;
+import com.example.residents_meeting.vote.repository.VoteRepository;
 import com.example.residents_meeting.vote.service.VoteService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +20,14 @@ public class VoteServiceImpl implements VoteService {
 
 	private final RequestContextHolder requestContextHolder;
 	private final SelectOptionRepository selectOptionRepository;
+	private final VoteRepository voteRepository;
 
-	public VoteServiceImpl(RequestContextHolder requestContextHolder, SelectOptionRepository selectOptionRepository) {
+	public VoteServiceImpl(RequestContextHolder requestContextHolder,
+						   SelectOptionRepository selectOptionRepository,
+						   VoteRepository voteRepository) {
 		this.requestContextHolder = requestContextHolder;
 		this.selectOptionRepository = selectOptionRepository;
+		this.voteRepository = voteRepository;
 	}
 
 	@Override
@@ -39,5 +45,13 @@ public class VoteServiceImpl implements VoteService {
 
 		VoteEvent voteEvent = new VoteEvent(selectOption.getId(), user.getId());
 		return new VoteCreationResultDto(selectOption.getAgenda().getTitle(), selectOption.getSummary());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public VoteHistory getVoteHistory(Long agendaId) {
+		return voteRepository.findVoteHistoryByUserIdAndAgendaId(
+				requestContextHolder.getUser().getId(),
+				agendaId);
 	}
 }

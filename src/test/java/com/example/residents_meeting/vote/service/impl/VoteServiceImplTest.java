@@ -8,9 +8,11 @@ import com.example.residents_meeting.vote.domain.Agenda;
 import com.example.residents_meeting.vote.domain.SelectOption;
 import com.example.residents_meeting.vote.domain.dto.VoteCreationDto;
 import com.example.residents_meeting.vote.domain.dto.VoteCreationResultDto;
+import com.example.residents_meeting.vote.domain.dto.VoteHistory;
 import com.example.residents_meeting.vote.exception.VoteException;
 import com.example.residents_meeting.vote.exception.VoteExceptionCode;
 import com.example.residents_meeting.vote.repository.SelectOptionRepository;
+import com.example.residents_meeting.vote.repository.VoteRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,10 +22,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,6 +39,8 @@ class VoteServiceImplTest {
 	private RequestContextHolder requestContextHolder;
 	@Mock
 	private SelectOptionRepository selectOptionRepository;
+	@Mock
+	private VoteRepository voteRepository;
 	@InjectMocks
 	private VoteServiceImpl voteServiceImpl;
 
@@ -116,6 +120,25 @@ class VoteServiceImplTest {
 			assertTrue(e instanceof VoteException);
 			assertEquals(VoteExceptionCode.NO_RIGHT_FOR_VOTE.getMessage(), e.getMessage());
 		}
+	}
+
+	@Test
+	@DisplayName("안건에 대한 가장 최근 투표 출력 성공")
+	void getVoteHistory() {
+		//given
+		Long agendaId = 3L;
+		LocalDateTime givenDateTime = LocalDateTime.of(2021, 1, 1, 0, 0, 0);
+		given(requestContextHolder.getUser()).willReturn(DEFAULT_USER);
+		given(voteRepository.findVoteHistoryByUserIdAndAgendaId(USER_ID,agendaId))
+				.willReturn(new VoteHistory(3L, givenDateTime));
+
+		//when
+		VoteHistory voteHistory1 = voteServiceImpl.getVoteHistory(agendaId);
+		VoteHistory voteHistory2 = voteServiceImpl.getVoteHistory(agendaId+1);
+		//then
+		assertEquals(3L, voteHistory1.selectOptionId());
+		assertEquals(givenDateTime, voteHistory1.voteTime());
+		assertNull(voteHistory2);
 	}
 
 	static class TestUser extends User {
