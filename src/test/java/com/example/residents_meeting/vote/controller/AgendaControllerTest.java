@@ -134,4 +134,18 @@ class AgendaControllerTest {
 				.andExpect(jsonPath("$").value(VoteExceptionCode.ONGOING_SECRET_VOTE.getMessage()))
 				.andDo(print());
 	}
+
+	@Test
+	void getListOfUserOfSelectOption() throws Exception {
+		//given
+		given(agendaService.getListOfUserIdOfSelectOptionId(anyLong()))
+				.willReturn(List.of(1L, 2L, 3L));
+		//when
+		mockMvc.perform(get("/api/agenda/select-option/1"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[0]").value(1L))
+				.andExpect(jsonPath("$[1]").value(2L))
+				.andExpect(jsonPath("$[2]").value(3L))
+				.andDo(print());
+	}
 }

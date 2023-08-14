@@ -7,6 +7,8 @@ import com.example.residents_meeting.vote.service.AgendaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/agenda")
 public class AgendaController {
@@ -26,5 +28,12 @@ public class AgendaController {
 	@GetMapping("/{agendaId}")
 	public ResponseEntity<AgendaHistory> getAgendaHistory(@PathVariable Long agendaId) {
 		return ResponseEntity.ok(agendaService.getAgendaHistory(agendaId));
+	}
+
+	@GetMapping("/select-option/{selectOptionId}")
+	public ResponseEntity<List<Long>> getListOfUserOfSelectOption(@PathVariable Long selectOptionId) {
+
+		//TODO: get list of user info from list of user id
+		return ResponseEntity.ok(agendaService.getListOfUserIdOfSelectOptionId(selectOptionId));
 	}
 }
