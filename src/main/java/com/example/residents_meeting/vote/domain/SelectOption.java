@@ -7,8 +7,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,21 +26,15 @@ public class SelectOption extends BaseEntity {
 	@Lob
 	private String details;
 
-	@OneToMany(mappedBy = "selectOption", orphanRemoval = true)
-	private List<Vote> votes;
-
-	protected SelectOption(Agenda agenda, String summary, String details) {
+	protected SelectOption(Long id, Agenda agenda, String summary, String details) {
+		this.id = id;
 		this.agenda = agenda;
 		this.summary = summary;
 		this.details = details;
 	}
 
-	protected void setId(Long id) {
-		this.id = id;
-	}
-
 	public static SelectOption from(Agenda agenda, SelectOptionCreationDto creationDto) {
-		return new SelectOption(agenda, creationDto.summary(), creationDto.details());
+		return new SelectOption(null, agenda, creationDto.summary(), creationDto.details());
 	}
 
 }

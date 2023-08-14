@@ -58,11 +58,9 @@ class VoteServiceImplTest {
 		//given
 		given(requestContextHolder.getUser()).willReturn(DEFAULT_USER);
 
-		TestAgenda defaultAgenda =  new TestAgenda("A12345678","안건 제목", "설명",LocalDate.now().plusDays(3));
-		defaultAgenda.setId(AGENDA_ID);
+		TestAgenda defaultAgenda =  new TestAgenda(AGENDA_ID, "A12345678","안건 제목", "설명",LocalDate.now().plusDays(3));
 
-		TestSelectOption defaultSelectOption = new TestSelectOption(defaultAgenda, "선택지 설명", null);
-		defaultSelectOption.setId(SELECT_OPTION_ID);
+		TestSelectOption defaultSelectOption = new TestSelectOption(SELECT_OPTION_ID, defaultAgenda, "선택지 설명", null);
 
 		given(selectOptionRepository.findByAgendaIdAndId(AGENDA_ID, SELECT_OPTION_ID))
 				.willReturn(Optional.of(defaultSelectOption));
@@ -101,11 +99,9 @@ class VoteServiceImplTest {
 		//given
 		given(requestContextHolder.getUser()).willReturn(DEFAULT_USER);
 
-		TestAgenda defaultAgenda =  new TestAgenda("87654321","안건 제목", "설명",LocalDate.now().plusDays(3));
-		defaultAgenda.setId(AGENDA_ID);
+		TestAgenda defaultAgenda =  new TestAgenda(AGENDA_ID, "87654321","안건 제목", "설명",LocalDate.now().plusDays(3));
 
-		TestSelectOption defaultSelectOption = new TestSelectOption(defaultAgenda, "선택지 설명", null);
-		defaultSelectOption.setId(SELECT_OPTION_ID);
+		TestSelectOption defaultSelectOption = new TestSelectOption(SELECT_OPTION_ID, defaultAgenda, "선택지 설명", null);
 
 		given(selectOptionRepository.findByAgendaIdAndId(AGENDA_ID, SELECT_OPTION_ID))
 				.willReturn(Optional.of(defaultSelectOption));
@@ -133,22 +129,14 @@ class VoteServiceImplTest {
 	}
 
 	static class TestAgenda extends Agenda {
-		public TestAgenda(String apartmentCode, String title, String details, LocalDate endDate) {
-			super(apartmentCode, title, details, endDate);
-		}
-
-		public void setId(Long id) {
-			super.setId(id);
+		public TestAgenda(Long id, String apartmentCode, String title, String details, LocalDate endDate) {
+			super(id, apartmentCode, title, details, endDate);
 		}
 	}
 
 	static class TestSelectOption extends SelectOption {
-		public TestSelectOption(Agenda agenda,  String summary, String details) {
-			super(agenda, summary, details);
-		}
-
-		public void setId(Long id) {
-			super.setId(id);
+		public TestSelectOption(Long id, Agenda agenda,  String summary, String details) {
+			super(id, agenda, summary, details);
 		}
 	}
 }

@@ -37,10 +37,12 @@ public class Agenda extends BaseEntity {
 	@OneToMany(mappedBy = "agenda", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	private List<SelectOption> selectOptions;
 
-	protected Agenda(String apartmentCode,
+	protected Agenda( Long id,
+				   String apartmentCode,
 				   String title,
 				   String details,
 				   LocalDate endDate) {
+		this.id = id;
 		this.apartmentCode = apartmentCode;
 		this.title = title;
 		this.details = details;
@@ -52,7 +54,8 @@ public class Agenda extends BaseEntity {
 	}
 
 	public static Agenda from(AgendaCreationDTO creationDTO) {
-		return new Agenda(creationDTO.apartmentCode(),
+		return new Agenda( null,
+				creationDTO.apartmentCode(),
 				creationDTO.title(),
 				creationDTO.details(),
 				creationDTO.endDate());
@@ -64,9 +67,5 @@ public class Agenda extends BaseEntity {
 				details,
 				endDate,
 				selectOptions.stream().map(SelectOption::getSummary).toList());
-	}
-
-	protected void setId(Long id) {
-		this.id = id;
 	}
 }

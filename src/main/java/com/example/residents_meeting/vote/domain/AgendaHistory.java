@@ -7,6 +7,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 import java.util.List;
 
+// 기록을 담은 사실상 record 에 가까운 entity
 @Getter
 @Entity
 @Table(name = "AGENDA_HISTORY")
