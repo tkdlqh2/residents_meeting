@@ -3,6 +3,7 @@ package com.example.residents_meeting.vote.service.impl;
 import com.example.residents_meeting.vote.domain.Agenda;
 import com.example.residents_meeting.vote.domain.AgendaHistory;
 import com.example.residents_meeting.vote.domain.SelectOption;
+import com.example.residents_meeting.vote.domain.SelectOptionHistory;
 import com.example.residents_meeting.vote.domain.dto.AgendaCreationDTO;
 import com.example.residents_meeting.vote.domain.dto.AgendaCreationResultDTO;
 import com.example.residents_meeting.vote.exception.VoteException;
@@ -69,7 +70,7 @@ public class AgendaServiceImpl implements AgendaService {
 							.endDate(agenda.getEndDate())
 							.selectOptions(
 									agenda.getSelectOptions().stream()
-									.map(selectOption -> new AgendaHistory.SelectOptionHistory(
+									.map(selectOption -> new SelectOptionHistory(
 											selectOption.getSummary(),
 											selectOption.getDetails(),
 											selectOptionRepository.countById(selectOption.getId())
@@ -78,4 +79,10 @@ public class AgendaServiceImpl implements AgendaService {
 							.build();
 					});
 	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public List<Long> getListOfUserIdOfSelectOptionId(Long selectOptionId) {
+		return selectOptionRepository.findUserIdsById(selectOptionId);
+		}
 }
