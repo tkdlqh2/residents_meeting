@@ -1,6 +1,6 @@
 
 ### 1. 안건 생성
-POST {{root-url}}/agenda/
+POST {{root-url}}/api/agenda/
 Content-Type: application/json
 
 {
@@ -14,3 +14,11 @@ Content-Type: application/json
                                   ]
 }
 
+### 2. 투표
+POST {{root-url}}/api/vote/
+Content-Type: application/json
+
+{
+        "agendaId": 1,
+        "selectOptionId": 2
+}
