@@ -37,25 +37,4 @@ public class AgendaHistory {
 	}
 
 	protected AgendaHistory() {}
-
-	@Entity
-	@Getter
-	public static class SelectOptionHistory {
-		@Id
-		@JsonIgnore
-		private Long id;
-		@Column(nullable = false)
-		private String summary;
-		private String details;
-		private int count;
-
-		public SelectOptionHistory(String summary, String details, int count) {
-			this.summary = summary;
-			this.details = details;
-			this.count = count;
-		}
-
-		public SelectOptionHistory() {
-		}
-	}
 }

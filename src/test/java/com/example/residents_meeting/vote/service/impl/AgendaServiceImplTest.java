@@ -3,6 +3,7 @@ package com.example.residents_meeting.vote.service.impl;
 import com.example.residents_meeting.vote.domain.Agenda;
 import com.example.residents_meeting.vote.domain.AgendaHistory;
 import com.example.residents_meeting.vote.domain.SelectOption;
+import com.example.residents_meeting.vote.domain.SelectOptionHistory;
 import com.example.residents_meeting.vote.domain.dto.AgendaCreationDTO;
 import com.example.residents_meeting.vote.domain.dto.AgendaCreationResultDTO;
 import com.example.residents_meeting.vote.domain.dto.SelectOptionCreationDto;
@@ -92,8 +93,8 @@ class AgendaServiceImplTest {
 								.endDate(LocalDate.now().minusDays(3))
 								.selectOptions(
 										List.of(
-												new AgendaHistory.SelectOptionHistory("찬성", "찬성입니다.", 1),
-												new AgendaHistory.SelectOptionHistory("반대", "반대입니다.", 2)
+												new SelectOptionHistory("찬성", "찬성입니다.", 1),
+												new SelectOptionHistory("반대", "반대입니다.", 2)
 										)
 								)
 								.build()

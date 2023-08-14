@@ -1,6 +1,7 @@
 package com.example.residents_meeting.vote.controller;
 
 import com.example.residents_meeting.vote.domain.AgendaHistory;
+import com.example.residents_meeting.vote.domain.SelectOptionHistory;
 import com.example.residents_meeting.vote.domain.dto.AgendaCreationDTO;
 import com.example.residents_meeting.vote.domain.dto.AgendaCreationResultDTO;
 import com.example.residents_meeting.vote.domain.dto.SelectOptionCreationDto;
@@ -88,8 +89,8 @@ class AgendaControllerTest {
 						"설명",
 						LocalDate.now().minusDays(1),
 						List.of(
-								new AgendaHistory.SelectOptionHistory("찬성", "찬성입니다.",1),
-								new AgendaHistory.SelectOptionHistory("반대", "반대입니다.",2)
+								new SelectOptionHistory("찬성", "찬성입니다.",1),
+								new SelectOptionHistory("반대", "반대입니다.",2)
 								)
 										)
 							);
