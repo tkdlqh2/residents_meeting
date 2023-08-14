@@ -1,5 +1,6 @@
 package com.example.residents_meeting.vote.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import java.util.List;
 @Table(name = "AGENDA_HISTORY")
 public class AgendaHistory {
 	@Id
+	@JsonIgnore
 	private Long id;
 	@Column(nullable = false)
 	private String title;
@@ -40,7 +42,9 @@ public class AgendaHistory {
 	@Getter
 	public static class SelectOptionHistory {
 		@Id
+		@JsonIgnore
 		private Long id;
+		@Column(nullable = false)
 		private String summary;
 		private String details;
 		private int count;
