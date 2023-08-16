@@ -8,9 +8,11 @@ import com.example.residents_meeting.vote.domain.Agenda;
 import com.example.residents_meeting.vote.domain.SelectOption;
 import com.example.residents_meeting.vote.domain.dto.VoteCreationDto;
 import com.example.residents_meeting.vote.domain.dto.VoteCreationResultDto;
+import com.example.residents_meeting.vote.domain.dto.VoteHistory;
 import com.example.residents_meeting.vote.exception.VoteException;
 import com.example.residents_meeting.vote.exception.VoteExceptionCode;
 import com.example.residents_meeting.vote.repository.SelectOptionRepository;
+import com.example.residents_meeting.vote.repository.VoteRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,10 +22,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,6 +39,8 @@ class VoteServiceImplTest {
 	private RequestContextHolder requestContextHolder;
 	@Mock
 	private SelectOptionRepository selectOptionRepository;
+	@Mock
+	private VoteRepository voteRepository;
 	@InjectMocks
 	private VoteServiceImpl voteServiceImpl;
 
@@ -58,11 +62,9 @@ class VoteServiceImplTest {
 		//given
 		given(requestContextHolder.getUser()).willReturn(DEFAULT_USER);
 
-		TestAgenda defaultAgenda =  new TestAgenda("A12345678","안건 제목", "설명",LocalDate.now().plusDays(3));
-		defaultAgenda.setId(AGENDA_ID);
+		TestAgenda defaultAgenda =  new TestAgenda(AGENDA_ID, "A12345678","안건 제목", "설명",LocalDate.now().plusDays(3));
 
-		TestSelectOption defaultSelectOption = new TestSelectOption(defaultAgenda, "선택지 설명", null);
-		defaultSelectOption.setId(SELECT_OPTION_ID);
+		TestSelectOption defaultSelectOption = new TestSelectOption(SELECT_OPTION_ID, defaultAgenda, "선택지 설명", null);
 
 		given(selectOptionRepository.findByAgendaIdAndId(AGENDA_ID, SELECT_OPTION_ID))
 				.willReturn(Optional.of(defaultSelectOption));
@@ -101,11 +103,9 @@ class VoteServiceImplTest {
 		//given
 		given(requestContextHolder.getUser()).willReturn(DEFAULT_USER);
 
-		TestAgenda defaultAgenda =  new TestAgenda("87654321","안건 제목", "설명",LocalDate.now().plusDays(3));
-		defaultAgenda.setId(AGENDA_ID);
+		TestAgenda defaultAgenda =  new TestAgenda(AGENDA_ID, "87654321","안건 제목", "설명",LocalDate.now().plusDays(3));
 
-		TestSelectOption defaultSelectOption = new TestSelectOption(defaultAgenda, "선택지 설명", null);
-		defaultSelectOption.setId(SELECT_OPTION_ID);
+		TestSelectOption defaultSelectOption = new TestSelectOption(SELECT_OPTION_ID, defaultAgenda, "선택지 설명", null);
 
 		given(selectOptionRepository.findByAgendaIdAndId(AGENDA_ID, SELECT_OPTION_ID))
 				.willReturn(Optional.of(defaultSelectOption));
@@ -122,6 +122,25 @@ class VoteServiceImplTest {
 		}
 	}
 
+	@Test
+	@DisplayName("안건에 대한 가장 최근 투표 출력 성공")
+	void getVoteHistory() {
+		//given
+		Long agendaId = 3L;
+		LocalDateTime givenDateTime = LocalDateTime.of(2021, 1, 1, 0, 0, 0);
+		given(requestContextHolder.getUser()).willReturn(DEFAULT_USER);
+		given(voteRepository.findVoteHistoryByUserIdAndAgendaId(USER_ID,agendaId))
+				.willReturn(new VoteHistory(3L, givenDateTime));
+
+		//when
+		VoteHistory voteHistory1 = voteServiceImpl.getVoteHistory(agendaId);
+		VoteHistory voteHistory2 = voteServiceImpl.getVoteHistory(agendaId+1);
+		//then
+		assertEquals(3L, voteHistory1.selectOptionId());
+		assertEquals(givenDateTime, voteHistory1.voteTime());
+		assertNull(voteHistory2);
+	}
+
 	static class TestUser extends User {
 		public TestUser(String username, String password, String name, String phone, Address address, UserRole role) {
 			super(username, password, name, phone, address, role);
@@ -133,22 +152,14 @@ class VoteServiceImplTest {
 	}
 
 	static class TestAgenda extends Agenda {
-		public TestAgenda(String apartmentCode, String title, String details, LocalDate endDate) {
-			super(apartmentCode, title, details, endDate);
-		}
-
-		public void setId(Long id) {
-			super.setId(id);
+		public TestAgenda(Long id, String apartmentCode, String title, String details, LocalDate endDate) {
+			super(id, apartmentCode, title, details, endDate);
 		}
 	}
 
 	static class TestSelectOption extends SelectOption {
-		public TestSelectOption(Agenda agenda,  String summary, String details) {
-			super(agenda, summary, details);
-		}
-
-		public void setId(Long id) {
-			super.setId(id);
+		public TestSelectOption(Long id, Agenda agenda,  String summary, String details) {
+			super(id, agenda, summary, details);
 		}
 	}
 }

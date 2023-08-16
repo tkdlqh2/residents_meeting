@@ -1,0 +1,1 @@
+INSERT INTO users ('id', 'name', 'email', 'password', 'created_at') values (1,  '홍길동', 'abc@gmail.com');
