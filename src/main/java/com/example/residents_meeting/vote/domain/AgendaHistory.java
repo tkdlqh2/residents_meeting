@@ -26,6 +26,7 @@ public class AgendaHistory {
 	private LocalDate endDate;
 
 	@OneToMany
+	@JoinColumn(name = "agenda_id")
 	List<SelectOptionHistory> selectOptions;
 
 	@Builder
