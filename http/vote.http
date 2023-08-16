@@ -1,0 +1,12 @@
+### 1. 투표
+POST {{root-url}}/api/vote/
+Content-Type: application/json
+
+{
+  "agendaId": 1,
+  "selectOptionId": 2
+}
+
+### 2. 가장 최근 투표 결과 조회
+GET {{root-url}}/api/vote/1
+Content-Type: application/json
