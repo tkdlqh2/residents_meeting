@@ -30,10 +30,10 @@ public class AgendaController {
 		return ResponseEntity.ok(agendaService.getAgendaHistory(agendaId));
 	}
 
-	@GetMapping("/select-option/{selectOptionId}")
-	public ResponseEntity<List<Long>> getListOfUserOfSelectOption(@PathVariable Long selectOptionId) {
+	@GetMapping("{agendaId}/select-option/{selectOptionId}")
+	public ResponseEntity<List<Long>> getListOfUserOfSelectOption(@PathVariable Long agendaId, @PathVariable Long selectOptionId) {
 
 		//TODO: get list of user info from list of user id
-		return ResponseEntity.ok(agendaService.getListOfUserIdOfSelectOptionId(selectOptionId));
+		return ResponseEntity.ok(agendaService.getListOfUserIdOfAgendaAndSelectOption(agendaId, selectOptionId));
 	}
 }

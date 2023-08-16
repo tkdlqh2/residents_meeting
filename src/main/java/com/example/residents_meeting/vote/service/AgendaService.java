@@ -10,5 +10,5 @@ public interface AgendaService {
 
 	AgendaCreationResultDTO createAgenda(AgendaCreationDTO creationDTO);
 	AgendaHistory getAgendaHistory(Long agendaId);
-	List<Long> getListOfUserIdOfSelectOptionId(Long selectOptionId);
+	List<Long> getListOfUserIdOfAgendaAndSelectOption(Long agendaId, Long selectOptionId);
 }

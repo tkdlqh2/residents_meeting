@@ -52,12 +52,7 @@ public class AgendaServiceImpl implements AgendaService {
 	@Transactional(readOnly = true)
 	@Override
 	public AgendaHistory getAgendaHistory(Long agendaId) {
-		LocalDate endDate = agendaRepository.findEndDateById(agendaId)
-				.orElseThrow(() -> new VoteException(VoteExceptionCode.AGENDA_NOT_FOUND));
-
-		if (LocalDate.now().isBefore(endDate)) {
-			throw new VoteException(VoteExceptionCode.ONGOING_SECRET_VOTE);
-		}
+		checkOngoingSecretVote(agendaId);
 
 		return agendaHistoryRepository.findById(agendaId)
 				.orElseGet( () -> {
@@ -82,7 +77,20 @@ public class AgendaServiceImpl implements AgendaService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<Long> getListOfUserIdOfSelectOptionId(Long selectOptionId) {
-		return selectOptionRepository.findUserIdsById(selectOptionId);
+	public List<Long> getListOfUserIdOfAgendaAndSelectOption(Long agendaId, Long selectOptionId) {
+		checkOngoingSecretVote(agendaId);
+
+
+		return selectOptionRepository.findUserIdsByAgendaIdAndId(agendaId, selectOptionId);
 		}
+
+
+	private void checkOngoingSecretVote(Long agendaId) {
+		LocalDate endDate = agendaRepository.findEndDateById(agendaId)
+				.orElseThrow(() -> new VoteException(VoteExceptionCode.AGENDA_NOT_FOUND));
+
+		if (LocalDate.now().isBefore(endDate)) {
+			throw new VoteException(VoteExceptionCode.ONGOING_SECRET_VOTE);
+		}
+	}
 }

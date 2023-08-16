@@ -138,10 +138,10 @@ class AgendaControllerTest {
 	@Test
 	void getListOfUserOfSelectOption() throws Exception {
 		//given
-		given(agendaService.getListOfUserIdOfSelectOptionId(anyLong()))
+		given(agendaService.getListOfUserIdOfAgendaAndSelectOption(anyLong(), anyLong()))
 				.willReturn(List.of(1L, 2L, 3L));
 		//when
-		mockMvc.perform(get("/api/agenda/select-option/1"))
+		mockMvc.perform(get("/api/agenda/2/select-option/1"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0]").value(1L))
 				.andExpect(jsonPath("$[1]").value(2L))

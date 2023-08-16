@@ -215,16 +215,19 @@ class AgendaServiceImplTest {
 	@DisplayName("선택지에 투표한 유저 아이디 목록 가져오기 성공")
 	void getListOfUserIdOfSelectOptionId() {
 		//given
+		Long agendaId = 2L;
 		Long selectOptionId = 1L;
 		List<Long> userIdList = List.of(1L, 2L, 3L);
-		given(mockSelectOptionRepository.findUserIdsById(selectOptionId))
+		given(mockSelectOptionRepository.findUserIdsByAgendaIdAndId(agendaId, selectOptionId))
 				.willReturn(userIdList);
 
 		//when
-		List<Long> result = agendaServiceImplUnderTest.getListOfUserIdOfSelectOptionId(selectOptionId);
+		List<Long> result = agendaServiceImplUnderTest.getListOfUserIdOfAgendaAndSelectOption(agendaId, selectOptionId);
 
 		//then
-		verify(mockSelectOptionRepository, times(1)).findUserIdsById(selectOptionId);
+
+		verify(mockAgendaRepository,times(1)).findEndDateById(agendaId);
+		verify(mockSelectOptionRepository, times(1)).findUserIdsByAgendaIdAndId(agendaId, selectOptionId);
 		assertEquals(userIdList, result);
 
 	}
