@@ -68,8 +68,10 @@ public class AgendaServiceImpl implements AgendaService {
 									.map(selectOption -> new SelectOptionHistory(
 											selectOption.getSummary(),
 											selectOption.getDetails(),
-											selectOptionRepository.countById(selectOption.getId())
-										)
+											selectOptionRepository.countById(selectOption.getId()) == null
+													?
+													0 : selectOptionRepository.countById(selectOption.getId())
+																				)
 									).toList())
 							.build();
 					});

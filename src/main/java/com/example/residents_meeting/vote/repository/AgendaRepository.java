@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface AgendaRepository extends JpaRepository<Agenda, Long> {
+	@Query("select a.endDate from Agenda a where a.id = :id")
 	Optional<LocalDate> findEndDateById(Long id);
 	@Query("select a from Agenda a join fetch a.selectOptions where a.id = :id")
 	Optional<Agenda> findByIdUsingFetchJoin(Long id);
