@@ -13,11 +13,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -37,10 +39,10 @@ class VoteControllerTest {
 
 	@Test
 	@DisplayName("투표 성공")
+	@WithMockUser(roles = "MEMBER")
 	void voteSuccess() throws Exception {
 
 		//given
-
 		given(voteService.createVote(any(VoteCreationDto.class)))
 				.willReturn(new VoteCreationResultDto("title", "summary"));
 
@@ -50,7 +52,7 @@ class VoteControllerTest {
 					.content(objectMapper.writeValueAsString(
 							new VoteCreationDto(AGENDA_ID, SELECT_OPTION_ID)
 					))
-					.contentType(MediaType.APPLICATION_JSON))
+					.contentType(MediaType.APPLICATION_JSON).with(csrf()))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.agendaTitle").value("title"))
 				.andExpect(jsonPath("$.selectOptionSummary").value("summary"))
@@ -60,6 +62,7 @@ class VoteControllerTest {
 
 	@Test
 	@DisplayName("투표 실패 - 선택지 찾을 수 없음")
+	@WithMockUser(roles = "MEMBER")
 	void voteFail_SelectOptionNotFound() throws Exception {
 		//given
 		doThrow(new VoteException(VoteExceptionCode.SELECT_OPTION_NOT_FOUND))
@@ -71,7 +74,7 @@ class VoteControllerTest {
 								.content(objectMapper.writeValueAsString(
 										new VoteCreationDto(AGENDA_ID, SELECT_OPTION_ID)
 								))
-								.contentType(MediaType.APPLICATION_JSON))
+								.contentType(MediaType.APPLICATION_JSON).with(csrf()))
 				.andExpect(status().is(VoteExceptionCode.SELECT_OPTION_NOT_FOUND.getStatusCode()))
 				.andExpect(jsonPath("$").value(VoteExceptionCode.SELECT_OPTION_NOT_FOUND.getMessage()))
 				.andDo(print());
@@ -79,6 +82,7 @@ class VoteControllerTest {
 
 	@Test
 	@DisplayName("투표 실패 - 투표 권한 없음")
+	@WithMockUser(roles = "MEMBER")
 	void voteFail_NoRightForVote() throws Exception {
 		//given
 		doThrow(new VoteException(VoteExceptionCode.NO_RIGHT_FOR_VOTE))
@@ -90,7 +94,7 @@ class VoteControllerTest {
 								.content(objectMapper.writeValueAsString(
 										new VoteCreationDto(AGENDA_ID, SELECT_OPTION_ID)
 								))
-								.contentType(MediaType.APPLICATION_JSON))
+								.contentType(MediaType.APPLICATION_JSON).with(csrf()))
 				.andExpect(status().is(VoteExceptionCode.NO_RIGHT_FOR_VOTE.getStatusCode()))
 				.andExpect(jsonPath("$").value(VoteExceptionCode.NO_RIGHT_FOR_VOTE.getMessage()))
 				.andDo(print());

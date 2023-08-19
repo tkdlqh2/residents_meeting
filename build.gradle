@@ -38,6 +38,7 @@ dependencies {
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'javax.xml.bind:jaxb-api:2.3.1' // 현재 버전을 확인해서 사용하세요
+    testImplementation group: 'org.springframework.security', name: 'spring-security-test'
 }
 
 tasks.named('test') {
