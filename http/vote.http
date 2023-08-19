@@ -1,12 +1,14 @@
 ### 1. 투표
 POST {{root-url}}/api/vote/
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5MjM4MjcwMiwiZXhwIjoxNjkyNDY5MTAyfQ.TZeALhzPNZ8UrRFjKx7jqEV8URnrUVm5DpjnxBzBm5BEqUSu984SkrBn3kamFQf0XLGqPwfOoMFTaRgDdIUaQg
 
 {
-  "agendaId": 1,
-  "selectOptionId": 2
+  "agendaId": 2,
+  "selectOptionId": 3
 }
 
 ### 2. 가장 최근 투표 결과 조회
-GET {{root-url}}/api/vote/1
+GET {{root-url}}/api/vote/2
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5MjM4MjcwMiwiZXhwIjoxNjkyNDY5MTAyfQ.TZeALhzPNZ8UrRFjKx7jqEV8URnrUVm5DpjnxBzBm5BEqUSu984SkrBn3kamFQf0XLGqPwfOoMFTaRgDdIUaQg
