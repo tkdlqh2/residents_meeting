@@ -39,7 +39,7 @@ public class VoteServiceImpl implements VoteService {
 				.orElseThrow(() -> new VoteException(VoteExceptionCode.SELECT_OPTION_NOT_FOUND));
 
 		User user = requestContextHolder.getUser();
-		if (!user.getAddress().apartmentCode().equals(selectOption.getAgenda().getApartmentCode())) {
+		if (!user.getAddress().getApartmentCode().equals(selectOption.getAgenda().getApartmentCode())) {
 			throw new VoteException(VoteExceptionCode.NO_RIGHT_FOR_VOTE);
 		}
 

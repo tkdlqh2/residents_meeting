@@ -2,9 +2,10 @@
 ### 1. 안건 생성
 POST {{root-url}}/api/agenda/
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5MjM4MzIwMCwiZXhwIjoxNjkyNDY5NjAwfQ.M2XjQpIroZZ4nLMnxe0z75XReDi_xJwH4WLGUMLWm_XHXeeHZwN0pTqtHZfK5ysKzfEQJlHqMN3eXZdjpJJ4LQ
 
 {
-    "apartmentCode": "A12345678",
+    "apartmentCode": "A1234567",
     "title": "제목",
     "details": "설명",
     "endDate": "2023-08-14",
@@ -17,6 +18,7 @@ Content-Type: application/json
 ### 2. 안건 조회
 GET {{root-url}}/api/agenda/1
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5MjM4MjcwMiwiZXhwIjoxNjkyNDY5MTAyfQ.TZeALhzPNZ8UrRFjKx7jqEV8URnrUVm5DpjnxBzBm5BEqUSu984SkrBn3kamFQf0XLGqPwfOoMFTaRgDdIUaQg
 
 ### 3. 선택지 조회
 GET {{root-url}}/api/agenda/1/select-option/2

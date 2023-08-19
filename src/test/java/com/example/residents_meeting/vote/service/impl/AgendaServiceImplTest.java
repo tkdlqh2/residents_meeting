@@ -218,6 +218,10 @@ class AgendaServiceImplTest {
 		Long agendaId = 2L;
 		Long selectOptionId = 1L;
 		List<Long> userIdList = List.of(1L, 2L, 3L);
+
+		given(mockAgendaRepository.findEndDateById(anyLong()))
+				.willReturn(Optional.of(LocalDate.now().minusDays(1)));
+
 		given(mockSelectOptionRepository.findUserIdsByAgendaIdAndId(agendaId, selectOptionId))
 				.willReturn(userIdList);
 

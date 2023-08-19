@@ -5,6 +5,7 @@ import com.example.residents_meeting.vote.domain.dto.VoteCreationResultDto;
 import com.example.residents_meeting.vote.domain.dto.VoteHistory;
 import com.example.residents_meeting.vote.service.VoteService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,7 +18,7 @@ public class VoteController {
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<VoteCreationResultDto> vote(@RequestBody VoteCreationDto creationDto) {
+	public ResponseEntity<VoteCreationResultDto> vote(@RequestBody @Validated VoteCreationDto creationDto) {
 		return ResponseEntity.ok(voteService.createVote(creationDto));
 	}
 

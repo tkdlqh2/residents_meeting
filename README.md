@@ -32,6 +32,12 @@
     3. 이사 등으로 위치를 변경할 수 있으며 우편물 방송을 신청하여 우편물에 지정된 코드를 입력하면 기존 세대주들이 등록해제 된다. (기간은 한달에 한번 신청 가능)
 5. 각 아파트 세대, 또는 동네 게시판 (대숲)
 
+### MICROSERVICE 구성 계획
+1. API GATEWAY
+2. USER SERVICE
+3. VOTE WRITE SERVICE
+4. VOTE READ SERVICE
+
 ### 투표 관련 ERD
 ```mermaid
 erDiagram
@@ -67,4 +73,23 @@ erDiagram
     }
 ```
 
-활용할 기술 spring batch 와 kafka 를 활용한 비동기 투표 결과 처리
+### VOTE MICROSERVICE 예상 구조
+``` mermaid
+flowchart LR
+    A[user]
+    subgraph vote write service
+    B[vote write api]    
+    C[event handler]
+    end
+    D[vote read service - web flux]
+    E[(vote database)]
+    F(message queue)
+
+    A --> B
+    B --> F
+    F --> C
+    C --> E
+    D --> E
+    A --> D
+```
+

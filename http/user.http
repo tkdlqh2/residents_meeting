@@ -1,0 +1,22 @@
+### 1. user 등록
+POST {{root-url}}/api/user/register
+Content-Type: application/json
+
+{
+  "email": "abc@gmail.com",
+  "password": "test1234",
+  "name": "abc",
+  "phone": "01012345678",
+  "apartmentCode": "A12345678",
+  "building": 101,
+  "unit": 101
+}
+
+### 2. user 로그인
+POST {{root-url}}/api/user/login
+Content-Type: application/json
+
+{
+  "email": "abc@gmail.com",
+  "password": "test1234"
+}

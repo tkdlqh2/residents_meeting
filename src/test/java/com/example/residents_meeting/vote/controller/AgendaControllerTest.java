@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -24,6 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -42,6 +44,7 @@ class AgendaControllerTest {
 	private ObjectMapper objectMapper;
 
 	@Test
+	@WithMockUser(roles = "MEMBER")
 	void createAgenda() throws Exception {
 		//given
 		given(agendaService.createAgenda(any(AgendaCreationDTO.class)))
@@ -66,7 +69,7 @@ class AgendaControllerTest {
 										new SelectOptionCreationDto("반대", "반대입니다.")
 								)
 						)
-				)).contentType(MediaType.APPLICATION_JSON))
+				)).contentType(MediaType.APPLICATION_JSON).with(csrf()))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.apartmentCode").value("A12345678"))
 				.andExpect(jsonPath("$.title").value("제목"))
@@ -80,6 +83,7 @@ class AgendaControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = "MEMBER")
 	void getAgendaHistorySuccess() throws Exception {
 		//given
 		given(agendaService.getAgendaHistory(anyLong()))
@@ -110,6 +114,7 @@ class AgendaControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = "MEMBER")
 	void getAgendaHistory_AgendaNotFoundException() throws Exception {
 		//given
 		doThrow(new VoteException(VoteExceptionCode.AGENDA_NOT_FOUND))
@@ -123,6 +128,7 @@ class AgendaControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = "MEMBER")
 	void getAgendaHistory_OngoingSecretVoteException() throws Exception {
 		//given
 		doThrow(new VoteException(VoteExceptionCode.ONGOING_SECRET_VOTE))
@@ -136,6 +142,7 @@ class AgendaControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = "MEMBER")
 	void getListOfUserOfSelectOption() throws Exception {
 		//given
 		given(agendaService.getListOfUserIdOfAgendaAndSelectOption(anyLong(), anyLong()))

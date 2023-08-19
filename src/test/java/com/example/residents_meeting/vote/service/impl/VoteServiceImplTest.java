@@ -47,7 +47,8 @@ class VoteServiceImplTest {
 
 	@BeforeAll
 	static void setUp() {
-		DEFAULT_USER = new TestUser("test",
+		DEFAULT_USER = new TestUser(1L,
+				"test",
 				"test",
 				"test",
 				"test",
@@ -142,8 +143,8 @@ class VoteServiceImplTest {
 	}
 
 	static class TestUser extends User {
-		public TestUser(String username, String password, String name, String phone, Address address, UserRole role) {
-			super(username, password, name, phone, address, role);
+		public TestUser(Long id, String username, String password, String name, String phone, Address address, UserRole role) {
+			super(id, username, password, name, phone, address, role);
 		}
 
 		public void setId(Long id) {
