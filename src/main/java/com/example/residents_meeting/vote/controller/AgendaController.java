@@ -5,6 +5,7 @@ import com.example.residents_meeting.vote.domain.dto.AgendaCreationDTO;
 import com.example.residents_meeting.vote.domain.dto.AgendaCreationResultDTO;
 import com.example.residents_meeting.vote.service.AgendaService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class AgendaController {
 
 	@PostMapping("/")
 	public ResponseEntity<AgendaCreationResultDTO> createAgenda(
-			@RequestBody AgendaCreationDTO creationDTO) {
+			@RequestBody @Validated AgendaCreationDTO creationDTO) {
 		return ResponseEntity.ok(agendaService.createAgenda(creationDTO));
 	}
 

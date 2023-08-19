@@ -1,5 +1,6 @@
 package com.example.residents_meeting.common.controller;
 
+import com.example.residents_meeting.user.exception.UserException;
 import com.example.residents_meeting.vote.exception.VoteException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,12 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handleException(Exception e) {
 		log.error("Exception: ", e);
 		return ResponseEntity.status(500).body("Internal Server Error");
+	}
+
+	@ExceptionHandler(UserException.class)
+	public ResponseEntity<String> handleUserException(UserException e) {
+		log.debug("UserException: ", e);
+		return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
 	}
 
 	@ExceptionHandler(VoteException.class)
