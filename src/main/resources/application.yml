@@ -17,6 +17,10 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
     show-sql: true
 
+kafka:
+  connect-server: 127.0.0.1:9092
+
+
 token:
   secret: usertokenulabala
   expiration: 86400000
