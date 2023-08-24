@@ -1,6 +1,7 @@
 package com.example.residents_meeting.vote.service.impl;
 
 import com.example.residents_meeting.common.RequestContextHolder;
+import com.example.residents_meeting.common.config.messagequeue.KafkaProducer;
 import com.example.residents_meeting.user.domain.Address;
 import com.example.residents_meeting.user.domain.User;
 import com.example.residents_meeting.user.domain.UserRole;
@@ -8,15 +9,19 @@ import com.example.residents_meeting.vote.domain.Agenda;
 import com.example.residents_meeting.vote.domain.SelectOption;
 import com.example.residents_meeting.vote.domain.dto.VoteCreationDto;
 import com.example.residents_meeting.vote.domain.dto.VoteCreationResultDto;
+import com.example.residents_meeting.vote.domain.dto.VoteEvent;
 import com.example.residents_meeting.vote.domain.dto.VoteHistory;
 import com.example.residents_meeting.vote.exception.VoteException;
 import com.example.residents_meeting.vote.exception.VoteExceptionCode;
 import com.example.residents_meeting.vote.repository.SelectOptionRepository;
 import com.example.residents_meeting.vote.repository.VoteRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -27,6 +32,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class VoteServiceImplTest {
@@ -41,6 +48,8 @@ class VoteServiceImplTest {
 	private SelectOptionRepository selectOptionRepository;
 	@Mock
 	private VoteRepository voteRepository;
+	@Mock
+	private KafkaProducer kafkaProducer;
 	@InjectMocks
 	private VoteServiceImpl voteServiceImpl;
 
@@ -59,7 +68,7 @@ class VoteServiceImplTest {
 
 	@Test
 	@DisplayName("투표 생성 성공")
-	void createVoteTestSuccess() {
+	void createVoteTestSuccess() throws JsonProcessingException {
 		//given
 		given(requestContextHolder.getUser()).willReturn(DEFAULT_USER);
 
@@ -71,11 +80,19 @@ class VoteServiceImplTest {
 				.willReturn(Optional.of(defaultSelectOption));
 
 		VoteCreationDto voteCreationDto = new VoteCreationDto(AGENDA_ID, SELECT_OPTION_ID);
+		ArgumentCaptor<VoteEvent> voteEventArgumentCaptor = ArgumentCaptor.forClass(VoteEvent.class);
 
 		//when
 		VoteCreationResultDto resultDto = voteServiceImpl.createVote(voteCreationDto);
 
 		//then
+		verify(kafkaProducer,times(1)).send(voteEventArgumentCaptor.capture());
+		VoteEvent sentEvent = voteEventArgumentCaptor.getValue();
+		ObjectMapper objectMapper = new ObjectMapper();
+		System.out.println(objectMapper.writeValueAsString(sentEvent));
+		assertEquals(SELECT_OPTION_ID, sentEvent.getPayload().selectOptionId());
+		assertEquals(USER_ID, sentEvent.getPayload().userId());
+
 		assertEquals("안건 제목", resultDto.agendaTitle());
 		assertEquals("선택지 설명", resultDto.selectOptionSummary());
 	}
