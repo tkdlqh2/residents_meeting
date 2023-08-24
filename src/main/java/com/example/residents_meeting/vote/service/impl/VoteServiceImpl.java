@@ -1,6 +1,7 @@
 package com.example.residents_meeting.vote.service.impl;
 
 import com.example.residents_meeting.common.RequestContextHolder;
+import com.example.residents_meeting.common.config.messagequeue.KafkaProducer;
 import com.example.residents_meeting.user.domain.User;
 import com.example.residents_meeting.vote.domain.SelectOption;
 import com.example.residents_meeting.vote.domain.dto.VoteCreationDto;
@@ -21,13 +22,16 @@ public class VoteServiceImpl implements VoteService {
 	private final RequestContextHolder requestContextHolder;
 	private final SelectOptionRepository selectOptionRepository;
 	private final VoteRepository voteRepository;
+	private final KafkaProducer kafkaProducer;
 
 	public VoteServiceImpl(RequestContextHolder requestContextHolder,
 						   SelectOptionRepository selectOptionRepository,
-						   VoteRepository voteRepository) {
+						   VoteRepository voteRepository,
+						   KafkaProducer kafkaProducer) {
 		this.requestContextHolder = requestContextHolder;
 		this.selectOptionRepository = selectOptionRepository;
 		this.voteRepository = voteRepository;
+		this.kafkaProducer = kafkaProducer;
 	}
 
 	@Override
@@ -44,6 +48,7 @@ public class VoteServiceImpl implements VoteService {
 		}
 
 		VoteEvent voteEvent = new VoteEvent(selectOption.getId(), user.getId());
+		kafkaProducer.send(voteEvent);
 		return new VoteCreationResultDto(selectOption.getAgenda().getTitle(), selectOption.getSummary());
 	}
 
