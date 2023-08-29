@@ -1,26 +1,11 @@
+server:
+  port: 8761
+
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/resident
-    username: root
-    password: zerobase
-    h2:
-      console:
-        enabled: true
-        path: /h2-console
-  jpa:
-    generate-ddl: true
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
+  application:
+    name: discovery_service
 
-kafka:
-  connect-server: 127.0.0.1:9092
-
-
-token:
-  secret: usertokenulabala
-  expiration: 86400000
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
