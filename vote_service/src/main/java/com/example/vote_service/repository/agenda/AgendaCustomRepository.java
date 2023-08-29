@@ -1,8 +1,12 @@
 package com.example.vote_service.repository.agenda;
 
-import com.example.vote_service.domain.Agenda;
+import com.example.vote_service.domain.dto.AgendaVo;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
+
 public interface AgendaCustomRepository {
-	Mono<Agenda> findByIdUsingFetchJoin(Long id);
+	Mono<AgendaVo> findByIdUsingFetchJoin(Long id);
+
+	Mono<LocalDate> findEndDateById(Long agendaId);
 }

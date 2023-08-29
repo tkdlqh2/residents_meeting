@@ -1,35 +1,26 @@
 package com.example.vote_service.domain.dto;
 
-import com.example.vote_service.messagequeue.Field;
-import com.example.vote_service.messagequeue.KafkaDto;
-import com.example.vote_service.messagequeue.Schema;
+import com.example.vote_service.messagequeue.Event;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
-public class VoteEvent extends KafkaDto {
-	private final Schema schema = Schema.builder()
-			.type("struct")
-			.fields(List.of(
-					new Field("int32", false, "select_option_id"),
-					new Field("int32", false, "user_id")))
-			.optional(false)
-			.name("vote")
-			.build();
-	private final VotePayload payload;
+public class VoteEvent extends Event {
 
-	private VoteEvent(VotePayload votePayload) {
-		super("vote_sink");
-		this.payload = votePayload;
+	private VoteEvent(VotePayload votePayload) throws JsonProcessingException {
+		super("vote_sink", votePayload);
 	}
 
-	public VoteEvent(Long selectOptionId, Long userId) {
-		this(new VotePayload(selectOptionId, userId));
+	public static VoteEvent toEvent(VoteCreationDto voteCreationDto) {
+		try {
+			return new VoteEvent(new VotePayload(voteCreationDto.selectOptionId(), voteCreationDto.userId()));
+		} catch (JsonProcessingException e) {
+			return null;
+		}
 	}
 
-	public record VotePayload(
+	private record VotePayload(
 			@JsonProperty("select_option_id")
 			Long selectOptionId,
 			@JsonProperty("user_id")

@@ -1,45 +1,24 @@
 package com.example.vote_service.messagequeue;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.CompletableFuture;
+import reactor.core.publisher.Mono;
+import reactor.kafka.sender.KafkaSender;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class KafkaProducer {
-	private final KafkaTemplate<String, String> kafkaTemplate;
-	private final ObjectMapper objectMapper;
+	private final KafkaSender<String, Object> producer;
 
-	public KafkaProducer(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
-		this.kafkaTemplate = kafkaTemplate;
-		this.objectMapper = objectMapper;
-	}
+	public Mono<MessageProduceResult> send(Event message) {
 
-	public KafkaDto send(KafkaDto kafkaDto) {
-		String jsonInString = "";
-		try {
-			jsonInString = objectMapper.writeValueAsString(kafkaDto);
-			System.out.println(jsonInString);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-
-		CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(kafkaDto.getTopicName(), jsonInString);
-		String finalJsonInString = jsonInString;
-		future.whenComplete((result, ex) -> {
-			if (ex == null) {
-				log.info("Sent message=[" + finalJsonInString +
-						"] with offset=[" + result.getRecordMetadata().offset() + "]");
-			} else {
-				log.info("Unable to send message=[" +
-						finalJsonInString + "] due to : " + ex.getMessage());
-			}
-		});
-		return kafkaDto;
+		return producer.createOutbound()
+				.send(Mono.just(new ProducerRecord<>(message.getTopicName(), null, message.getRequestedMessage())))
+				.then()
+				.thenReturn(new MessageProduceResult(message))
+				.onErrorResume(e -> Mono.just(new MessageProduceResult(message, e)));
 	}
 }

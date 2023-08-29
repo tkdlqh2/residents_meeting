@@ -2,10 +2,8 @@ package com.example.vote_service.controller;
 
 import com.example.vote_service.domain.AgendaHistory;
 import com.example.vote_service.domain.dto.AgendaCreationDTO;
-import com.example.vote_service.domain.dto.AgendaCreationResultDTO;
 import com.example.vote_service.service.AgendaService;
 import org.springframework.http.MediaType;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,8 +21,8 @@ public class AgendaController {
 	}
 
 	@PostMapping(value = "/")
-	public Mono<AgendaCreationResultDTO> createAgenda(
-			@RequestBody @Validated AgendaCreationDTO creationDTO) {
+	public Mono<Boolean> createAgenda(
+			@RequestBody AgendaCreationDTO creationDTO) {
 		return agendaService.createAgenda(creationDTO);
 	}
 

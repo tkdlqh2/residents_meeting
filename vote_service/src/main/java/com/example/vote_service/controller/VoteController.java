@@ -2,7 +2,6 @@ package com.example.vote_service.controller;
 
 import com.example.vote_service.UserDto;
 import com.example.vote_service.domain.dto.VoteCreationDto;
-import com.example.vote_service.domain.dto.VoteCreationResultDto;
 import com.example.vote_service.domain.dto.VoteHistory;
 import com.example.vote_service.service.VoteService;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +18,7 @@ public class VoteController {
 	}
 
 	@PostMapping("/")
-	public Mono<VoteCreationResultDto> vote(@RequestBody @Validated VoteCreationDto creationDto) {
+	public Mono<Boolean> vote(@RequestBody @Validated VoteCreationDto creationDto) {
 		return voteService.createVote(creationDto)
 				.contextWrite(context -> context.put("user", new UserDto(1L, "A12345677")));
 	}

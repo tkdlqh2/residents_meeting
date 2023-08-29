@@ -1,6 +1,5 @@
 package com.example.vote_service.domain;
 
-import com.example.vote_service.domain.dto.AgendaCreationDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -48,15 +47,5 @@ public class Agenda extends BaseEntity {
 		this.title = title;
 		this.details = details;
 		this.endDate = endDate;
-	}
-
-	public static Agenda from(AgendaCreationDTO creationDTO) {
-		return new Agenda(null,
-				creationDTO.apartmentCode(),
-				creationDTO.title(),
-				creationDTO.details(),
-				creationDTO.endDate(),
-				LocalDateTime.now(),
-				null);
 	}
 }

@@ -1,16 +1,15 @@
 package com.example.vote_service.service.impl;
 
-import com.example.vote_service.domain.Agenda;
 import com.example.vote_service.domain.AgendaHistory;
-import com.example.vote_service.domain.SelectOption;
 import com.example.vote_service.domain.SelectOptionHistory;
 import com.example.vote_service.domain.dto.AgendaCreationDTO;
-import com.example.vote_service.domain.dto.AgendaCreationResultDTO;
+import com.example.vote_service.domain.dto.AgendaEvent;
 import com.example.vote_service.exception.VoteException;
 import com.example.vote_service.exception.VoteExceptionCode;
+import com.example.vote_service.messagequeue.KafkaProducer;
+import com.example.vote_service.messagequeue.MessageProduceResult;
 import com.example.vote_service.repository.agenda.AgendaCustomRepository;
 import com.example.vote_service.repository.agenda.AgendaHistoryRepository;
-import com.example.vote_service.repository.agenda.AgendaRepository;
 import com.example.vote_service.repository.select_option.SelectOptionRepository;
 import com.example.vote_service.service.AgendaService;
 import org.springframework.stereotype.Service;
@@ -25,16 +24,16 @@ import java.util.List;
 @Service
 public class AgendaServiceImpl implements AgendaService {
 
-	private final AgendaRepository agendaRepository;
+	private final KafkaProducer kafkaProducer;
 	private final AgendaCustomRepository agendaCustomRepository;
 	private final SelectOptionRepository selectOptionRepository;
 	private final AgendaHistoryRepository agendaHistoryRepository;
 
-	public AgendaServiceImpl(AgendaRepository agendaRepository,
+	public AgendaServiceImpl(KafkaProducer kafkaProducer,
 							 AgendaCustomRepository agendaCustomRepository,
 							 SelectOptionRepository selectOptionRepository,
 							 AgendaHistoryRepository agendaHistoryRepository) {
-		this.agendaRepository = agendaRepository;
+		this.kafkaProducer = kafkaProducer;
 		this.agendaCustomRepository = agendaCustomRepository;
 		this.selectOptionRepository = selectOptionRepository;
 		this.agendaHistoryRepository = agendaHistoryRepository;
@@ -42,24 +41,14 @@ public class AgendaServiceImpl implements AgendaService {
 
 	@Override
 	@Transactional
-	public Mono<AgendaCreationResultDTO> createAgenda(AgendaCreationDTO creationDTO) {
+	public Mono<Boolean> createAgenda(AgendaCreationDTO creationDTO) {
 		return Mono.just(creationDTO)
-				.map(Agenda::from)
-				.flatMap(agendaRepository::save)
 				.log()
-				.zipWith(Mono.just(creationDTO.selectOptionCreationDtoList()))
-				.flatMap(tuple -> {
-						Agenda savedAgenda = tuple.getT1();
-						System.out.println(savedAgenda.getId());
-						List<SelectOption> selectOptions = tuple.getT2()
-								.stream()
-								.map(selectOptionCreationDto -> SelectOption.from(savedAgenda, selectOptionCreationDto))
-								.toList();
-
-						return selectOptionRepository.saveAll(selectOptions)
-								.collectList()
-								.map(savedSelectOptions -> AgendaCreationResultDTO.from(savedAgenda, savedSelectOptions));
-				});
+				.mapNotNull(AgendaEvent::from)
+				.log()
+				.flatMap(kafkaProducer::send)
+				.log()
+				.map(MessageProduceResult::getStatus);
 	}
 
 	@Transactional(readOnly = true)
@@ -72,21 +61,21 @@ public class AgendaServiceImpl implements AgendaService {
 					 return agendaCustomRepository.findByIdUsingFetchJoin(agendaId)
 							.switchIfEmpty(Mono.error(() -> new VoteException(VoteExceptionCode.AGENDA_NOT_FOUND)))
 							.flatMap(agenda -> {
-								Flux<SelectOptionHistory> selectOptionHistoryFlux = selectOptionRepository.findAllByAgendaId(agendaId)
+								Flux<SelectOptionHistory> selectOptionHistoryFlux = Flux.fromIterable(agenda.selectOptionList())
 										.flatMap(selectOption -> {
-											Mono<Integer> selectOptionCount = selectOptionRepository.countById(selectOption.getId())
+											Mono<Integer> selectOptionCount = selectOptionRepository.countById(selectOption.id())
 													.defaultIfEmpty(0);
 											return selectOptionCount.map(count -> new SelectOptionHistory(
-													selectOption.getSummary(),
-													selectOption.getDetails(),
+													selectOption.summary(),
+													selectOption.details(),
 													count
 											));
 										});
 								return selectOptionHistoryFlux.collectList()
 										.map(selectOptionHistories -> AgendaHistory.builder()
-												.title(agenda.getTitle())
-												.details(agenda.getDetails())
-												.endDate(agenda.getEndDate())
+												.title(agenda.title())
+												.details(agenda.details())
+												.endDate(agenda.endDate())
 												.selectOptions(selectOptionHistories)
 												.build());
 							});
@@ -106,7 +95,7 @@ public class AgendaServiceImpl implements AgendaService {
 
 	private Mono<Void> checkOngoingSecretVote(Long agendaId) {
 
-		return agendaRepository.findEndDateById(agendaId)
+		return agendaCustomRepository.findEndDateById(agendaId)
 				.switchIfEmpty(Mono.error(() -> new VoteException(VoteExceptionCode.AGENDA_NOT_FOUND)))
 				.flatMap(
 					date -> {
