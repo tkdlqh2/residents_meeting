@@ -28,8 +28,8 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
-
-
-token:
-  secret: usertokenulabala
-  expiration: 86400000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans

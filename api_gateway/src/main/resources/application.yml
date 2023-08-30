@@ -19,24 +19,45 @@ spring:
           predicates:
             - Path=/api/user/sign-up
             - Method=POST
+
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
             - Path=/api/user/login
             - Method=POST
+
+        - id: user-service
+          uri: lb://USER-SERVICE/actuator/**
+          predicates:
+            - Path=/api/user/actuator/**
+            - Method=GET,POST
+          filters:
+            - RewritePath=/api/user/(?<segment>.*), /$\{segment}
+
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
             - Path=/api/user/**
           filters:
             - AuthorizationHeaderFilter
+
+        - id: vote-service
+          uri: lb://VOTE-SERVICE
+          predicates:
+            - Path=/api/vote/actuator/**
+            - Method=GET,POST
+          filters:
+            - AuthorizationHeaderFilter
+            - RewritePath=/api/vote/(?<segment>.*), /$\{segment}
+
         - id: vote-service
           uri: lb://VOTE-SERVICE
           predicates:
             - Path=/api/vote/**
           filters:
             - AuthorizationHeaderFilter
-
-token:
-  secret: usertokenulabala
-  expiration: 86400000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, httptrace
