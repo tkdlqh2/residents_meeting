@@ -1,12 +1,12 @@
 ### 1. user 등록
-POST {{root-url}}/api/user/register
+POST {{root-url}}/api/user/sign-up
 Content-Type: application/json
 
 {
-  "email": "abc@gmail.com",
+  "email": "yhj7124@naver.com",
   "password": "test1234",
   "name": "abc",
-  "phone": "01012345678",
+  "phone": "01099157124",
   "apartmentCode": "A12345678",
   "building": 101,
   "unit": 101
