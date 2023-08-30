@@ -1,0 +1,41 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: vote-service
+  profiles:
+    active: local
+  r2dbc:
+    url: r2dbc:mysql://127.0.0.1:3306/resident?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia%2BSeoul
+    username: root
+    password: zerobase
+    pool:
+      max-size: 100
+      validation-query: SELECT 1
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+kafka:
+  connect-server: localhost:9092
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
