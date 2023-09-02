@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Comparator;
 
 @Repository
@@ -27,7 +28,7 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
     			SELECT a.id AS agendaId, a.apartment_code AS apartmentCode, a.title AS agendaTitle, 
     			a.details AS agendaDetails, a.end_date AS agendaEndDate, a.created_time AS agendaCreatedTime,
     			a.updated_time AS agendaUpdatedTime, s.id AS selectOptionId, s.summary AS selectOptionSummary,
-    			s.details AS selectOptionDetails, s.created_time AS selectOptionCreatedTime
+    			s.details AS selectOptionDetails, s.created_time AS selectOptionCreatedTime, s.updated_time As selectOptionUpdatedTime
 				FROM Agenda a 
 				JOIN select_option s
 				ON a.id = s.agenda_id
@@ -45,8 +46,8 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 									null,
 									(String) row.get("selectOptionSummary"),
 									(String) row.get("selectOptionDetails"),
-									(LocalDateTime) row.get("selectOptionCreatedTime"),
-									null
+									((ZonedDateTime)row.get("selectOptionCreatedTime")).toLocalDateTime(),
+									((ZonedDateTime) row.get("selectOptionUpdatedTime")).toLocalDateTime()
 							)).toList();
 					var row = result.get(0);
 
@@ -75,5 +76,19 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 				.bind("agendaId", agendaId)
 				.fetch().first()
 				.map(result -> (LocalDate) result.get("end_date"));
+	}
+
+	@Override
+	public Mono<String> findApartmentCodeById(Long agendaId) {
+		String sql = """
+				SELECT a.apartment_code
+				FROM agenda a
+				WHERE id = :agendaId
+				""";
+
+		return databaseClient.sql(sql)
+				.bind("agendaId", agendaId)
+				.fetch().first()
+				.map(result -> (String) result.get("apartment_code"));
 	}
 }

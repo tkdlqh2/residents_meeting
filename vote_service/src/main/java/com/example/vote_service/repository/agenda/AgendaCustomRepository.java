@@ -9,4 +9,6 @@ public interface AgendaCustomRepository {
 	Mono<AgendaVo> findByIdUsingFetchJoin(Long id);
 
 	Mono<LocalDate> findEndDateById(Long agendaId);
+
+	Mono<String> findApartmentCodeById(Long agendaId);
 }

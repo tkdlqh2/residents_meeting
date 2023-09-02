@@ -2,22 +2,17 @@ package com.example.vote_service.domain.dto;
 
 import com.example.vote_service.messagequeue.Event;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 
 @Getter
 public class VoteEvent extends Event {
 
-	private VoteEvent(VotePayload votePayload) throws JsonProcessingException {
+	private VoteEvent(VotePayload votePayload) {
 		super("vote_sink", votePayload);
 	}
 
-	public static VoteEvent toEvent(VoteCreationDto voteCreationDto) {
-		try {
-			return new VoteEvent(new VotePayload(voteCreationDto.selectOptionId(), voteCreationDto.userId()));
-		} catch (JsonProcessingException e) {
-			return null;
-		}
+	public static VoteEvent toEvent(VoteCreationDto voteCreationDto, Long userId) {
+		return new VoteEvent(new VotePayload(voteCreationDto.selectOptionId(), userId));
 	}
 
 	private record VotePayload(
