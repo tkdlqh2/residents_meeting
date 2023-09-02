@@ -1,5 +1,7 @@
 package com.example.user_service.security;
 
+import com.example.user_service.config.RequestContextHolder;
+import com.example.user_service.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -18,11 +19,13 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 public class WebSecurity {
 
 	private final JwtTokenProvider jwtTokenProvider;
-	private final UserDetailsService userDetailsService;
+	private final UserService userDetailsService;
+	private final RequestContextHolder requestContextHolder;
 
-	public WebSecurity(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
+	public WebSecurity(JwtTokenProvider jwtTokenProvider, UserService userDetailsService, RequestContextHolder requestContextHolder) {
 		this.jwtTokenProvider = jwtTokenProvider;
 		this.userDetailsService = userDetailsService;
+		this.requestContextHolder = requestContextHolder;
 	}
 
 	@Bean
@@ -38,7 +41,7 @@ public class WebSecurity {
 				)
 				.headers(header -> header.frameOptions(
 						HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-				.addFilterBefore(new JwtAuthenticationFilter(userDetailsService, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+				.addFilterBefore(new JwtAuthenticationFilter(userDetailsService, jwtTokenProvider, requestContextHolder), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}

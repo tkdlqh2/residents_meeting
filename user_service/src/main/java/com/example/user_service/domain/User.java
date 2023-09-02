@@ -1,6 +1,7 @@
 package com.example.user_service.domain;
 
 import com.example.user_service.domain.dto.UserDto;
+import com.example.user_service.domain.dto.UserInfo;
 import com.example.user_service.domain.dto.UserSignUpRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -68,12 +69,12 @@ public class User extends BaseEntity implements UserDetails {
 				UserRole.UNREGISTERED);
 	}
 
-	protected void setId(Long id) {
-		this.id = id;
-	}
-
 	public UserDto toUserDto() {
 		return new UserDto(email, name);
+	}
+
+	public UserInfo toUserInfo() {
+		return new UserInfo(id, email, name, phone, address);
 	}
 
 	@Override

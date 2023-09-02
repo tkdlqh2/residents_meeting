@@ -1,10 +1,8 @@
 package com.example.user_service.service.impl;
 
+import com.example.user_service.config.RequestContextHolder;
 import com.example.user_service.domain.User;
-import com.example.user_service.domain.dto.LogInResultDto;
-import com.example.user_service.domain.dto.UserDto;
-import com.example.user_service.domain.dto.UserLoginRequest;
-import com.example.user_service.domain.dto.UserSignUpRequest;
+import com.example.user_service.domain.dto.*;
 import com.example.user_service.exception.UserException;
 import com.example.user_service.exception.UserExceptionCode;
 import com.example.user_service.repository.UserRepository;
@@ -22,13 +20,16 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final RequestContextHolder requestContextHolder;
 
 	public UserServiceImpl(UserRepository userRepository,
 						   PasswordEncoder passwordEncoder,
-						   JwtTokenProvider jwtTokenProvider) {
+						   JwtTokenProvider jwtTokenProvider,
+						   RequestContextHolder requestContextHolder) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.jwtTokenProvider = jwtTokenProvider;
+		this.requestContextHolder = requestContextHolder;
 	}
 
 	@Override
@@ -58,5 +59,10 @@ public class UserServiceImpl implements UserService {
 
 		return userRepository.findByEmail(username)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+	}
+
+	@Override
+	public UserInfo getUserInfo() {
+		return requestContextHolder.getUserInfo();
 	}
 }
