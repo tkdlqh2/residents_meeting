@@ -1,6 +1,5 @@
 package com.example.vote_service.controller;
 
-import com.example.vote_service.UserDto;
 import com.example.vote_service.domain.dto.VoteCreationDto;
 import com.example.vote_service.domain.dto.VoteHistory;
 import com.example.vote_service.service.VoteService;
@@ -19,13 +18,11 @@ public class VoteController {
 
 	@PostMapping("/")
 	public Mono<Boolean> vote(@RequestBody @Validated VoteCreationDto creationDto) {
-		return voteService.createVote(creationDto)
-				.contextWrite(context -> context.put("user", new UserDto(1L, "A12345677")));
+		return voteService.createVote(creationDto);
 	}
 
 	@GetMapping("/{agendaId}")
 	public Mono<VoteHistory> getCurrentVote(@PathVariable Long agendaId) {
-		return voteService.getVoteHistory(agendaId)
-				.contextWrite(context -> context.put("user", new UserDto(1L, "A12345677")));
+		return voteService.getVoteHistory(agendaId);
 	}
 }

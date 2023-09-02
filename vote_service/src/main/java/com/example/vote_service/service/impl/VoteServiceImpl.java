@@ -1,6 +1,6 @@
 package com.example.vote_service.service.impl;
 
-import com.example.vote_service.UserDto;
+import com.example.vote_service.UserInfo;
 import com.example.vote_service.domain.dto.*;
 import com.example.vote_service.exception.VoteException;
 import com.example.vote_service.exception.VoteExceptionCode;
@@ -38,10 +38,10 @@ public class VoteServiceImpl implements VoteService {
 				.flatMap(creationDto -> selectOptionRepository.findById(creationDto.selectOptionId()))
 				.switchIfEmpty(Mono.defer(() -> Mono.error(new VoteException(VoteExceptionCode.SELECT_OPTION_NOT_FOUND))))
 				.flatMap(selectOption -> agendaCustomRepository.findApartmentCodeById(selectOption.agendaId()))
-				.zipWith(Mono.deferContextual(contextView -> Mono.just((UserDto) contextView.get("user"))))
+				.zipWith(Mono.deferContextual(contextView -> Mono.just((UserInfo) contextView.get("user"))))
 				.flatMap(tuple -> {
 					String selectOptionApartmentCode = tuple.getT1();
-					String userApartmentCode = tuple.getT2().apartmentCode();
+					String userApartmentCode = tuple.getT2().address().apartmentCode();
 					if (!selectOptionApartmentCode.equals(userApartmentCode)) {
 						return Mono.error(new VoteException(VoteExceptionCode.NO_RIGHT_FOR_VOTE));
 					} else {
@@ -58,8 +58,8 @@ public class VoteServiceImpl implements VoteService {
 	public Mono<VoteHistory> getVoteHistory(Long agendaId) {
 
 		return Mono.deferContextual(contextView -> {
-			UserDto userDto = contextView.get("user");
-			return voteRepository.findVoteHistoryByUserIdAndAgendaId(userDto.id(), agendaId);
+			UserInfo userInfo = contextView.get("user");
+			return voteRepository.findVoteHistoryByUserIdAndAgendaId(userInfo.id(), agendaId);
 		}).switchIfEmpty(Mono.just(new VoteHistory(null,null)));
 	}
 }

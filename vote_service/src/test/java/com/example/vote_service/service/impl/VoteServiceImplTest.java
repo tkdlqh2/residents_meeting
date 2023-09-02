@@ -1,6 +1,6 @@
 package com.example.vote_service.service.impl;
 
-import com.example.vote_service.UserDto;
+import com.example.vote_service.UserInfo;
 import com.example.vote_service.domain.dto.SelectOptionVo;
 import com.example.vote_service.domain.dto.VoteCreationDto;
 import com.example.vote_service.domain.dto.VoteEvent;
@@ -60,11 +60,16 @@ class VoteServiceImplTest {
 		given(kafkaProducer.send(any()))
 				.willReturn(Mono.just(new MessageProduceResult(VoteEvent.toEvent(voteCreationDto, userId))));
 
+		UserInfo userInfo =  new UserInfo(userId,
+				null,
+				null,
+				null,
+				new UserInfo.Address(ApartmentCode,0,0));
 
 		//when & then
 		StepVerifier.create(voteService.createVote(voteCreationDto).contextWrite(
-						context -> context.put("user", new UserDto(userId, ApartmentCode)
-				)))
+						context -> context.put("user",userInfo)
+				))
 				.expectNext(true)
 				.verifyComplete();
 	}
@@ -91,10 +96,16 @@ class VoteServiceImplTest {
 				.willReturn(Mono.just(new MessageProduceResult(VoteEvent.toEvent(voteCreationDto, userId),
 						new RuntimeException())));
 
+		UserInfo userInfo =  new UserInfo(userId,
+				null,
+				null,
+				null,
+				new UserInfo.Address(ApartmentCode,0,0));
+
 
 		//when & then
 		StepVerifier.create(voteService.createVote(voteCreationDto).contextWrite(
-						context -> context.put("user", new UserDto(userId, ApartmentCode)
+						context -> context.put("user", userInfo
 						)))
 				.expectNext(false)
 				.verifyComplete();
@@ -113,9 +124,15 @@ class VoteServiceImplTest {
 		given(selectOptionRepository.findById(selectOptionId)).willReturn(
 				Mono.empty());
 
+		UserInfo userInfo =  new UserInfo(userId,
+				null,
+				null,
+				null,
+				new UserInfo.Address(ApartmentCode,0,0));
+
 		//when & then
 		StepVerifier.create(voteService.createVote(voteCreationDto).contextWrite(
-						context -> context.put("user", new UserDto(userId, ApartmentCode)
+						context -> context.put("user", userInfo
 						)))
 				.expectErrorMatches(throwable ->
 						throwable instanceof VoteException &&
@@ -140,9 +157,15 @@ class VoteServiceImplTest {
 		given(agendaCustomRepository.findApartmentCodeById(agendaId))
 				.willReturn(Mono.just("A12345679"));
 
+		UserInfo userInfo =  new UserInfo(userId,
+				null,
+				null,
+				null,
+				new UserInfo.Address(ApartmentCode,0,0));
+
 		//when & then
 		StepVerifier.create(voteService.createVote(voteCreationDto).contextWrite(
-						context -> context.put("user", new UserDto(userId, ApartmentCode)
+						context -> context.put("user", userInfo
 						)))
 				.expectErrorMatches(throwable ->
 						throwable instanceof VoteException &&
@@ -165,10 +188,15 @@ class VoteServiceImplTest {
 		given(voteRepository.findVoteHistoryByUserIdAndAgendaId(userId,agendaId)).willReturn(
 				Mono.just(voteHistory));
 
+		UserInfo userInfo =  new UserInfo(userId,
+				null,
+				null,
+				null,
+				new UserInfo.Address(ApartmentCode,0,0));
 
 		//when & then
 		StepVerifier.create(voteService.getVoteHistory(agendaId).contextWrite(
-						context -> context.put("user", new UserDto(userId, ApartmentCode)
+						context -> context.put("user", userInfo
 						)))
 				.expectNext(voteHistory)
 				.verifyComplete();
@@ -186,10 +214,15 @@ class VoteServiceImplTest {
 		given(voteRepository.findVoteHistoryByUserIdAndAgendaId(userId,agendaId)).willReturn(
 				Mono.empty());
 
+		UserInfo userInfo =  new UserInfo(userId,
+				null,
+				null,
+				null,
+				new UserInfo.Address(ApartmentCode,0,0));
 
 		//when & then
 		StepVerifier.create(voteService.getVoteHistory(agendaId).contextWrite(
-						context -> context.put("user", new UserDto(userId, ApartmentCode)
+						context -> context.put("user", userInfo
 						)))
 				.expectNextMatches(voteHistory ->
 						voteHistory.selectOptionId() == null &&
