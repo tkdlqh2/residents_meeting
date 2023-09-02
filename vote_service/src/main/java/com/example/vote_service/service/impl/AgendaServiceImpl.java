@@ -52,8 +52,8 @@ public class AgendaServiceImpl implements AgendaService {
 	@Transactional(readOnly = true)
 	@Override
 	public Flux<AgendaHistory> getAgendaHistory(Long agendaId) {
-		return Flux.interval(Duration.ofSeconds(2))
-				.flatMap(time -> checkOngoingSecretVote(agendaId))
+		return checkOngoingSecretVote(agendaId).flux()
+				.flatMap(date -> Flux.interval(Duration.ofSeconds(2)))
 				.flatMap(time -> agendaHistoryRepository.findById(agendaId)
 						.switchIfEmpty(Mono.defer(() -> getAgendaHistoryMonoFromRepo(agendaId))));
 
@@ -74,6 +74,7 @@ public class AgendaServiceImpl implements AgendaService {
 												count
 										));
 									});
+
 					return selectOptionHistoryFlux.collectList()
 							.map(selectOptionHistories -> AgendaHistory.builder()
 									.title(agendaVo.title())
@@ -87,10 +88,15 @@ public class AgendaServiceImpl implements AgendaService {
 	@Transactional(readOnly = true)
 	@Override
 	public Flux<List<Long>> getListOfUserIdOfAgendaAndSelectOption(Long agendaId, Long selectOptionId) {
-		return Flux.interval(Duration.ofSeconds(2))
-				.flatMap(time -> checkOngoingSecretVote(agendaId))
-				.flatMap(x -> selectOptionRepository.findUserIdsByAgendaIdAndId(agendaId, selectOptionId))
-				.switchIfEmpty(Mono.just(Collections.emptyList()));
+		return checkOngoingSecretVote(agendaId)
+				.flux()
+				.flatMap(date -> Flux.interval(Duration.ofSeconds(2)))
+				.flatMap(time ->
+						Mono.defer(() ->
+								selectOptionRepository.findUserIdsByAgendaIdAndId(agendaId, selectOptionId)
+										.collectList()
+										.switchIfEmpty(Mono.just(Collections.emptyList()))
+						));
 	}
 
 	private Mono<LocalDate> checkOngoingSecretVote(Long agendaId) {

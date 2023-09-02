@@ -7,20 +7,12 @@ spring:
   profiles:
     active: local
   r2dbc:
-    url: r2dbc:mysql://127.0.0.1:3306/resident?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia%2BSeoul
+    url: r2dbc:mysql://127.0.0.1:3306/resident?useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: zerobase
     pool:
       max-size: 100
       validation-query: SELECT 1
-  jpa:
-    generate-ddl: true
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
 
 eureka:
   instance:

@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import reactor.test.scheduler.VirtualTimeScheduler;
@@ -220,7 +221,7 @@ class AgendaServiceImplTest {
 				.willReturn(Mono.just(endDate));
 
 		given(selectOptionRepository.findUserIdsByAgendaIdAndId(agendaId, selectOptionId))
-				.willReturn(Mono.just(userIds));
+				.willReturn(Flux.fromIterable(userIds));
 
 
 		//when & then
@@ -232,6 +233,5 @@ class AgendaServiceImplTest {
 				.expectNext(userIds)
 				.thenCancel()
 				.verify();
-
 	}
 }
