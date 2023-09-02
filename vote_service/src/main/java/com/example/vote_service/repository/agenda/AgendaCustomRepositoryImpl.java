@@ -7,9 +7,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.Comparator;
 
 @Repository
 public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
@@ -36,8 +34,8 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 			""";
 
 		return databaseClient.sql(sqlWithSelectOption)
+				.bind("id", id)
 				.fetch().all()
-				.sort(Comparator.comparing(result -> (Long) result.get("selectOptionId")))
 				.collectList()
 				.map(result -> {
 					var selectOptions = result.stream()
@@ -46,9 +44,11 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 									null,
 									(String) row.get("selectOptionSummary"),
 									(String) row.get("selectOptionDetails"),
-									((ZonedDateTime)row.get("selectOptionCreatedTime")).toLocalDateTime(),
-									((ZonedDateTime) row.get("selectOptionUpdatedTime")).toLocalDateTime()
-							)).toList();
+									row.get("selectOptionCreatedTime") == null ?
+											null : ((ZonedDateTime)row.get("selectOptionCreatedTime")).toLocalDateTime(),
+									row.get("selectOptionUpdatedTime") == null ?
+											null : ((ZonedDateTime)row.get("selectOptionUpdatedTime")).toLocalDateTime()))
+							.toList();
 					var row = result.get(0);
 
 					return AgendaVo.builder()
@@ -57,8 +57,10 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 							.title((String) row.get("agendaTitle"))
 							.details((String) row.get("agendaDetails"))
 							.endDate((LocalDate) row.get("agendaEndDate"))
-							.createdAt((LocalDateTime) row.get("agendaCreatedTime"))
-							.updatedAt((LocalDateTime) row.get("agendaUpdatedTime"))
+							.createdAt(row.get("agendaCreatedTime") == null ?
+									null : ((ZonedDateTime) row.get("agendaCreatedTime")).toLocalDateTime())
+							.updatedAt(row.get("agendaUpdatedTime") == null ?
+									null : ((ZonedDateTime) row.get("agendaUpdatedTime")).toLocalDateTime())
 							.selectOptionList(selectOptions)
 							.build();
 				});
