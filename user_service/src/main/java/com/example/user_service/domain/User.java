@@ -74,7 +74,7 @@ public class User extends BaseEntity implements UserDetails {
 	}
 
 	public UserInfo toUserInfo() {
-		return new UserInfo(id, email, name, phone, address);
+		return new UserInfo(id, email, name, phone, address, role);
 	}
 
 	@Override
