@@ -64,7 +64,8 @@ class VoteServiceImplTest {
 				null,
 				null,
 				null,
-				new UserInfo.Address(ApartmentCode,0,0));
+				new UserInfo.Address(ApartmentCode,0,0),
+				null);
 
 		//when & then
 		StepVerifier.create(voteService.createVote(voteCreationDto).contextWrite(
@@ -100,7 +101,8 @@ class VoteServiceImplTest {
 				null,
 				null,
 				null,
-				new UserInfo.Address(ApartmentCode,0,0));
+				new UserInfo.Address(ApartmentCode,0,0),
+				null);
 
 
 		//when & then
@@ -128,7 +130,8 @@ class VoteServiceImplTest {
 				null,
 				null,
 				null,
-				new UserInfo.Address(ApartmentCode,0,0));
+				new UserInfo.Address(ApartmentCode,0,0),
+				null);
 
 		//when & then
 		StepVerifier.create(voteService.createVote(voteCreationDto).contextWrite(
@@ -161,7 +164,8 @@ class VoteServiceImplTest {
 				null,
 				null,
 				null,
-				new UserInfo.Address(ApartmentCode,0,0));
+				new UserInfo.Address(ApartmentCode,0,0),
+				null);
 
 		//when & then
 		StepVerifier.create(voteService.createVote(voteCreationDto).contextWrite(
@@ -169,7 +173,7 @@ class VoteServiceImplTest {
 						)))
 				.expectErrorMatches(throwable ->
 						throwable instanceof VoteException &&
-								throwable.getMessage().equals(VoteExceptionCode.NO_RIGHT_FOR_VOTE.getMessage()))
+								throwable.getMessage().equals(VoteExceptionCode.NO_RIGHT_FOR.getMessage()))
 				.verify();
 	}
 
@@ -192,7 +196,8 @@ class VoteServiceImplTest {
 				null,
 				null,
 				null,
-				new UserInfo.Address(ApartmentCode,0,0));
+				new UserInfo.Address(ApartmentCode,0,0),
+				null);
 
 		//when & then
 		StepVerifier.create(voteService.getVoteHistory(agendaId).contextWrite(
@@ -218,7 +223,8 @@ class VoteServiceImplTest {
 				null,
 				null,
 				null,
-				new UserInfo.Address(ApartmentCode,0,0));
+				new UserInfo.Address(ApartmentCode,0,0),
+				null);
 
 		//when & then
 		StepVerifier.create(voteService.getVoteHistory(agendaId).contextWrite(

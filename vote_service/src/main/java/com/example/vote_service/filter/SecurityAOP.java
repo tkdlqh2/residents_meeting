@@ -11,14 +11,13 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import static com.example.vote_service.exception.VoteExceptionCode.NO_RIGHT_FOR_VOTE;
+import static com.example.vote_service.exception.VoteExceptionCode.NO_RIGHT_FOR;
 
 @Aspect
 @Component
 public class SecurityAOP {
 	@Around("@annotation(Authorize)")
 	public Publisher<Object> checkSecurity(ProceedingJoinPoint point) throws Throwable {
-
 		Mono<UserInfo> userInfoMono = Mono.deferContextual(ctx -> Mono.justOrEmpty((UserInfo)ctx.get("user")))
 				.switchIfEmpty(Mono.error(new RuntimeException("User not found")))
 				.filter(user -> {
@@ -28,7 +27,7 @@ public class SecurityAOP {
 					UserInfo.UserRole limitUserRole= signature.getMethod().getAnnotation(Authorize.class).role();
 
 					return contextUserRole.getPriority() <= limitUserRole.getPriority();
-				}).switchIfEmpty(Mono.error(new VoteException(NO_RIGHT_FOR_VOTE)));
+				}).switchIfEmpty(Mono.error(new VoteException(NO_RIGHT_FOR)));
 
 		Object result = point.proceed();
 

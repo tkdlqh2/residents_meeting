@@ -5,6 +5,7 @@ import com.example.vote_service.domain.dto.AgendaCreationDTO;
 import com.example.vote_service.filter.Authorize;
 import com.example.vote_service.service.AgendaService;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -26,7 +27,7 @@ public class AgendaController {
 	@Authorize(role = VICE_LEADER)
 	@PostMapping(value = "/")
 	public Mono<Boolean> createAgenda(
-			@RequestBody AgendaCreationDTO creationDTO) {
+			@RequestBody @Validated AgendaCreationDTO creationDTO) {
 		return agendaService.createAgenda(creationDTO);
 	}
 

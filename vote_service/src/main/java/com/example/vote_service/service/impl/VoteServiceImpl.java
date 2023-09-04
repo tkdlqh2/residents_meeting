@@ -12,6 +12,7 @@ import com.example.vote_service.repository.vote.VoteCustomRepository;
 import com.example.vote_service.service.VoteService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -33,7 +34,7 @@ public class VoteServiceImpl implements VoteService {
 
 	@Override
 	@Transactional
-	public Mono<Boolean> createVote(VoteCreationDto voteCreationDto) {
+	public Mono<Boolean> createVote(@Validated VoteCreationDto voteCreationDto) {
 		return Mono.just(voteCreationDto)
 				.flatMap(creationDto -> selectOptionRepository.findById(creationDto.selectOptionId()))
 				.switchIfEmpty(Mono.defer(() -> Mono.error(new VoteException(VoteExceptionCode.SELECT_OPTION_NOT_FOUND))))
@@ -43,7 +44,7 @@ public class VoteServiceImpl implements VoteService {
 					String selectOptionApartmentCode = tuple.getT1();
 					String userApartmentCode = tuple.getT2().address().apartmentCode();
 					if (!selectOptionApartmentCode.equals(userApartmentCode)) {
-						return Mono.error(new VoteException(VoteExceptionCode.NO_RIGHT_FOR_VOTE));
+						return Mono.error(new VoteException(VoteExceptionCode.NO_RIGHT_FOR));
 					} else {
 						return Mono.just(tuple.getT2());
 					}
