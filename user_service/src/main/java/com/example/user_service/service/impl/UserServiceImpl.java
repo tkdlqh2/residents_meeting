@@ -65,4 +65,11 @@ public class UserServiceImpl implements UserService {
 	public UserInfo getUserInfo() {
 		return requestContextHolder.getUserInfo();
 	}
+
+	@Override
+	public List<String> getUserEmails(List<Long> userIds) {
+		return userRepository.findAllById(userIds).stream()
+				.map(User::getEmail)
+				.toList();
+	}
 }

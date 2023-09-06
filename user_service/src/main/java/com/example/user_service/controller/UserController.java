@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -29,5 +31,10 @@ public class UserController {
 	@GetMapping("/")
 	public ResponseEntity<UserInfo> getUserInfo() {
 		return ResponseEntity.ok(userService.getUserInfo());
+	}
+
+	@GetMapping("/{userIds}")
+	public ResponseEntity<List<String>> getUserEmail(@PathVariable List<Long> userIds) {
+		return ResponseEntity.ok(userService.getUserEmails(userIds));
 	}
 }
