@@ -18,25 +18,25 @@
     2. 상정한 안건에 대해 기간을 정하고 투표를 진행함
         1. 비밀회의가 기본이고 세대주만이 투표를 할 수 있다
     3. 기간이 지나면 투표 결과가 나온다
+       1. 비밀 투표의 경우 투표 종료 시점까지 투표 결과를 볼 수 없다.
+       2. 추후에 비밀 투표가 아닌 안건으로 만들 수 있을 가능성을 생각해서 read api 를 구성한다.
+       3. 각 선택지에 투표한 사람 수가 나오고 선택지를 클릭하면 그 선택지에 투표한 사람을 볼 수도 있는 api 도 설계하되 기본적으로는 볼 수 없도록 한다.
     4. 추가 기능 → 각 투표 안건 별 의견방
 3. 안건 및 투표
-    1. 기본으로 제공할 안건 타입
-        1. 부녀회장 선출
-        2. 어떤 일에 대한 찬반 투표
-        3. 그 외의 커스텀 안건
-    2. 각 선택지는 기본 설명 + 추가설명을 가진다.
-    3. 비밀 여부도 선택 가능
+   1. 각 선택지는 기본 설명 + 추가설명을 가진다.
+   2. 비밀 여부도 선택 가능
 4. 유저의 등록 관리
     1. 각 주민들은 각자 발송된 코드로 인해 결정된다.
     2. 한 세대당 한 사람이 세대주로 등록이 되며 세대원간의 만장 일치로 세대주를 변경할 수 있다.
     3. 이사 등으로 위치를 변경할 수 있으며 우편물 방송을 신청하여 우편물에 지정된 코드를 입력하면 기존 세대주들이 등록해제 된다. (기간은 한달에 한번 신청 가능)
-5. 각 아파트 세대, 또는 동네 게시판 (대숲)
 
-### MICROSERVICE 구성 계획
-1. API GATEWAY
-2. USER SERVICE
-3. VOTE WRITE SERVICE
-4. VOTE READ SERVICE
+### MICROSERVICE 구성
+1. EUREKA SERVER (Residents Meeting - 가장 바깥 프로젝트)
+2. API GATEWAY 
+3. CONFIG SERVER
+4. USER SERVICE
+5. VOTE SERVICE (Spring Webflux)
+6. KAFKA CONSUMER & BATCH SERVICE
 
 ### 투표 관련 ERD
 ```mermaid
@@ -73,7 +73,7 @@ erDiagram
     }
 ```
 
-### VOTE MICROSERVICE 예상 구조
+### VOTE SERVICE 예상 구조
 ``` mermaid
 flowchart LR
     A[user]
@@ -81,7 +81,7 @@ flowchart LR
     B[vote write api]    
     C[event handler]
     end
-    D[vote read service - web flux]
+    D[vote read api]
     E[(vote database)]
     F(message queue)
 
