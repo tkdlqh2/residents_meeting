@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -167,6 +168,24 @@ class UserServiceImplTest {
 			assertTrue(e instanceof UserException);
 			assertEquals(UserExceptionCode.PASSWORD_NOT_MATCH.getMessage(), e.getMessage());
 		}
+	}
+
+	@Test
+	@DisplayName("User 정보 조회 성공")
+	void getUserEmailsSuccess() {
+		//given
+		List<Long> userIds = List.of(1L, 2L);
+
+		given(userRepository.findAllById(userIds))
+				.willReturn(List.of(new TestUser(1L, "email1", "password1", "name1", "phone1", new Address("A12345678", 101, 101), UserRole.LEADER),
+						new TestUser(2L, "email2", "password2", "name2", "phone2", new Address("A12345678", 101, 101), UserRole.LEADER)));
+		//when
+		List<String> result = userServiceImplUnderTest.getUserEmails(userIds);
+
+		//then
+		assertEquals(2, result.size());
+		assertEquals("email1", result.get(0));
+		assertEquals("email2", result.get(1));
 	}
 
 	static class TestUser extends User {

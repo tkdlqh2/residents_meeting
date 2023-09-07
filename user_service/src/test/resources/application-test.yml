@@ -1,0 +1,3 @@
+token:
+  secret: usertokenulabala
+  expiration: 86400000

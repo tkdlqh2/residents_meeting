@@ -1,7 +1,6 @@
 package com.example.vote_service.domain.dto;
 
 import com.example.vote_service.messagequeue.Event;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,16 +8,12 @@ import java.util.List;
 
 public class AgendaEvent extends Event {
 
-	private AgendaEvent(AgendaPayload agendaPayload) throws JsonProcessingException {
+	private AgendaEvent(AgendaPayload agendaPayload) {
 		super("agenda_sink", agendaPayload);
 	}
 
 	public static AgendaEvent from(AgendaCreationDTO creationDTO) {
-		try {
-			return new AgendaEvent(new AgendaPayload(creationDTO));
-		} catch (JsonProcessingException e) {
-			return null;
-		}
+		return new AgendaEvent(new AgendaPayload(creationDTO));
 	}
 
 	private record AgendaPayload(

@@ -19,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -43,57 +44,62 @@ public class AgendaServiceImpl implements AgendaService {
 	@Transactional
 	public Mono<Boolean> createAgenda(AgendaCreationDTO creationDTO) {
 		return Mono.just(creationDTO)
-				.log()
 				.mapNotNull(AgendaEvent::from)
-				.log()
 				.flatMap(kafkaProducer::send)
-				.log()
 				.map(MessageProduceResult::getStatus);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
 	public Flux<AgendaHistory> getAgendaHistory(Long agendaId) {
-		return Flux.interval(Duration.ofSeconds(2))
-				.flatMap(this::checkOngoingSecretVote)
-				.flatMap(time -> agendaHistoryRepository.findById(agendaId))
-				.switchIfEmpty(Mono.defer(() -> {
-					 return agendaCustomRepository.findByIdUsingFetchJoin(agendaId)
-							.switchIfEmpty(Mono.error(() -> new VoteException(VoteExceptionCode.AGENDA_NOT_FOUND)))
-							.flatMap(agenda -> {
-								Flux<SelectOptionHistory> selectOptionHistoryFlux = Flux.fromIterable(agenda.selectOptionList())
-										.flatMap(selectOption -> {
-											Mono<Integer> selectOptionCount = selectOptionRepository.countById(selectOption.id())
-													.defaultIfEmpty(0);
-											return selectOptionCount.map(count -> new SelectOptionHistory(
-													selectOption.summary(),
-													selectOption.details(),
-													count
-											));
-										});
-								return selectOptionHistoryFlux.collectList()
-										.map(selectOptionHistories -> AgendaHistory.builder()
-												.title(agenda.title())
-												.details(agenda.details())
-												.endDate(agenda.endDate())
-												.selectOptions(selectOptionHistories)
-												.build());
-							});
-				}));
+		return checkOngoingSecretVote(agendaId).flux()
+				.flatMap(date -> Flux.interval(Duration.ofSeconds(2)))
+				.flatMap(time -> agendaHistoryRepository.findById(agendaId)
+						.switchIfEmpty(Mono.defer(() -> getAgendaHistoryMonoFromRepo(agendaId))));
 
+	}
+
+	private Mono<AgendaHistory> getAgendaHistoryMonoFromRepo(Long agendaId) {
+		return agendaCustomRepository.findByIdUsingFetchJoin(agendaId)
+				.switchIfEmpty(Mono.error(() -> new VoteException(VoteExceptionCode.AGENDA_NOT_FOUND)))
+				.flatMap(agendaVo -> {
+					Flux<SelectOptionHistory> selectOptionHistoryFlux =
+							Flux.fromIterable(agendaVo.selectOptionList()).flatMap(
+									selectOption -> {
+										Mono<Integer> selectOptionCount = selectOptionRepository.countById(selectOption.id())
+												.defaultIfEmpty(0);
+										return selectOptionCount.map(count -> new SelectOptionHistory(
+												selectOption.summary(),
+												selectOption.details(),
+												count
+										));
+									});
+
+					return selectOptionHistoryFlux.collectList()
+							.map(selectOptionHistories -> AgendaHistory.builder()
+									.title(agendaVo.title())
+									.details(agendaVo.details())
+									.endDate(agendaVo.endDate())
+									.selectOptions(selectOptionHistories)
+									.build());
+				});
 	}
 
 	@Transactional(readOnly = true)
 	@Override
 	public Flux<List<Long>> getListOfUserIdOfAgendaAndSelectOption(Long agendaId, Long selectOptionId) {
-		return Flux.interval(Duration.ofSeconds(2))
-				.flatMap(this::checkOngoingSecretVote)
-				.flatMap(time -> checkOngoingSecretVote(agendaId))
-				.flatMap(x -> selectOptionRepository.findUserIdsByAgendaIdAndId(agendaId, selectOptionId));
+		return checkOngoingSecretVote(agendaId)
+				.flux()
+				.flatMap(date -> Flux.interval(Duration.ofSeconds(2)))
+				.flatMap(time ->
+						Mono.defer(() ->
+								selectOptionRepository.findUserIdsByAgendaIdAndId(agendaId, selectOptionId)
+										.collectList()
+										.switchIfEmpty(Mono.just(Collections.emptyList()))
+						));
 	}
 
-
-	private Mono<Void> checkOngoingSecretVote(Long agendaId) {
+	private Mono<LocalDate> checkOngoingSecretVote(Long agendaId) {
 
 		return agendaCustomRepository.findEndDateById(agendaId)
 				.switchIfEmpty(Mono.error(() -> new VoteException(VoteExceptionCode.AGENDA_NOT_FOUND)))
@@ -102,7 +108,7 @@ public class AgendaServiceImpl implements AgendaService {
 						if (LocalDate.now().isBefore(date)) {
 							return Mono.error(() -> new VoteException(VoteExceptionCode.ONGOING_SECRET_VOTE));
 						}
-						return Mono.empty();
+						return Mono.just(date);
 				}
 		);
 	}

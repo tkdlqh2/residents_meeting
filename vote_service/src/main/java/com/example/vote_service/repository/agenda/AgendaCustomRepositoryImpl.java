@@ -7,8 +7,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Comparator;
+import java.time.ZonedDateTime;
 
 @Repository
 public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
@@ -27,7 +26,7 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
     			SELECT a.id AS agendaId, a.apartment_code AS apartmentCode, a.title AS agendaTitle, 
     			a.details AS agendaDetails, a.end_date AS agendaEndDate, a.created_time AS agendaCreatedTime,
     			a.updated_time AS agendaUpdatedTime, s.id AS selectOptionId, s.summary AS selectOptionSummary,
-    			s.details AS selectOptionDetails, s.created_time AS selectOptionCreatedTime
+    			s.details AS selectOptionDetails, s.created_time AS selectOptionCreatedTime, s.updated_time As selectOptionUpdatedTime
 				FROM Agenda a 
 				JOIN select_option s
 				ON a.id = s.agenda_id
@@ -35,8 +34,8 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 			""";
 
 		return databaseClient.sql(sqlWithSelectOption)
+				.bind("id", id)
 				.fetch().all()
-				.sort(Comparator.comparing(result -> (Long) result.get("selectOptionId")))
 				.collectList()
 				.map(result -> {
 					var selectOptions = result.stream()
@@ -45,9 +44,11 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 									null,
 									(String) row.get("selectOptionSummary"),
 									(String) row.get("selectOptionDetails"),
-									(LocalDateTime) row.get("selectOptionCreatedTime"),
-									null
-							)).toList();
+									row.get("selectOptionCreatedTime") == null ?
+											null : ((ZonedDateTime)row.get("selectOptionCreatedTime")).toLocalDateTime(),
+									row.get("selectOptionUpdatedTime") == null ?
+											null : ((ZonedDateTime)row.get("selectOptionUpdatedTime")).toLocalDateTime()))
+							.toList();
 					var row = result.get(0);
 
 					return AgendaVo.builder()
@@ -56,8 +57,10 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 							.title((String) row.get("agendaTitle"))
 							.details((String) row.get("agendaDetails"))
 							.endDate((LocalDate) row.get("agendaEndDate"))
-							.createdAt((LocalDateTime) row.get("agendaCreatedTime"))
-							.updatedAt((LocalDateTime) row.get("agendaUpdatedTime"))
+							.createdAt(row.get("agendaCreatedTime") == null ?
+									null : ((ZonedDateTime) row.get("agendaCreatedTime")).toLocalDateTime())
+							.updatedAt(row.get("agendaUpdatedTime") == null ?
+									null : ((ZonedDateTime) row.get("agendaUpdatedTime")).toLocalDateTime())
 							.selectOptionList(selectOptions)
 							.build();
 				});
@@ -75,5 +78,19 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 				.bind("agendaId", agendaId)
 				.fetch().first()
 				.map(result -> (LocalDate) result.get("end_date"));
+	}
+
+	@Override
+	public Mono<String> findApartmentCodeById(Long agendaId) {
+		String sql = """
+				SELECT a.apartment_code
+				FROM agenda a
+				WHERE id = :agendaId
+				""";
+
+		return databaseClient.sql(sql)
+				.bind("agendaId", agendaId)
+				.fetch().first()
+				.map(result -> (String) result.get("apartment_code"));
 	}
 }

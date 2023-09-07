@@ -44,16 +44,15 @@ spring:
         - id: vote-service
           uri: lb://VOTE-SERVICE
           predicates:
-            - Path=/api/vote/actuator/**
+            - Path=/api/vote/actuator/**, /api/agenda/actuator/**
             - Method=GET,POST
           filters:
-            - AuthorizationHeaderFilter
             - RewritePath=/api/vote/(?<segment>.*), /$\{segment}
 
         - id: vote-service
           uri: lb://VOTE-SERVICE
           predicates:
-            - Path=/api/vote/**
+            - Path=/api/vote/**, /api/agenda/**
           filters:
             - AuthorizationHeaderFilter
 management:

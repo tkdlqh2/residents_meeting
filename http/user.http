@@ -20,3 +20,8 @@ Content-Type: application/json
   "email": "abc@gmail.com",
   "password": "test1234"
 }
+
+### 3. user 정보
+GET {{root-url}}/api/user/
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5MzY1ODU5NSwiZXhwIjoxNjkzNzQ0OTk1fQ.I0l1Lu2RLJrv9EbGIkKslj7mDPn7gAr6w85GXjpRyfkTZuGS3uuFBaNgSCfDKHbVx6Xmr82VYc-hIbIiZSJYFA
