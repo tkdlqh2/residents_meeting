@@ -46,6 +46,7 @@ class UserServiceImplTest {
 	void singUpSuccess() {
 		//given
 		given(userRepository.existsByEmail(anyString())).willReturn(false);
+		given(userRepository.existsByPhone(anyString())).willReturn(false);
 		given(passwordEncoder.encode(anyString())).willReturn("Encoded password");
 		when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 		ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -101,6 +102,34 @@ class UserServiceImplTest {
 			assertEquals(UserExceptionCode.EMAIL_ALREADY_EXIST.getMessage(), e.getMessage());
 		}
 	}
+
+	@Test
+	@DisplayName("회원가입 실패 - 이미 존재하는 핸드폰 번호")
+	void singUpFail_AlreadyPhoneExist() {
+		//given
+		given(userRepository.existsByEmail(anyString())).willReturn(false);
+		given(userRepository.existsByPhone(anyString())).willReturn(true);
+
+		//when & then
+		try {
+			userServiceImplUnderTest.singUp(
+					new UserSignUpRequest(
+							"abc@gmail.com",
+							"12345678",
+							"홍길동",
+							"01012345678",
+							"A12345678",
+							101,
+							101
+					));
+
+			throw new RuntimeException("예외가 발생해야 합니다.");
+		} catch (Exception e) {
+			assertTrue(e instanceof UserException);
+			assertEquals(UserExceptionCode.PHONE_ALREADY_EXIST.getMessage(), e.getMessage());
+		}
+	}
+
 
 	@Test
 	@DisplayName("로그인 성공")

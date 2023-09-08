@@ -35,7 +35,8 @@ public class WebSecurity {
 				.authorizeHttpRequests(request ->
 						request.requestMatchers(antMatcher("/actuator/**")).permitAll()
 								.requestMatchers(antMatcher("/h2-console/**")).permitAll()
-								.requestMatchers(antMatcher("/api/user/**")).permitAll()
+								.requestMatchers(antMatcher("/api/user/sign-up")).permitAll()
+								.requestMatchers(antMatcher("/api/user/login")).permitAll()
 								.requestMatchers(antMatcher("/error")).permitAll()
 								.anyRequest().authenticated()
 				)
