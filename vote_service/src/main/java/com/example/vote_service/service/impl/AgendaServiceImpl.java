@@ -13,7 +13,6 @@ import com.example.vote_service.repository.agenda.AgendaHistoryRepository;
 import com.example.vote_service.repository.select_option.SelectOptionRepository;
 import com.example.vote_service.service.AgendaService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -41,7 +40,6 @@ public class AgendaServiceImpl implements AgendaService {
 	}
 
 	@Override
-	@Transactional
 	public Mono<Boolean> createAgenda(AgendaCreationDTO creationDTO) {
 		return Mono.just(creationDTO)
 				.mapNotNull(AgendaEvent::from)
@@ -49,7 +47,6 @@ public class AgendaServiceImpl implements AgendaService {
 				.map(MessageProduceResult::getStatus);
 	}
 
-	@Transactional(readOnly = true)
 	@Override
 	public Flux<AgendaHistory> getAgendaHistory(Long agendaId) {
 		return checkOngoingSecretVote(agendaId).flux()
@@ -85,7 +82,6 @@ public class AgendaServiceImpl implements AgendaService {
 				});
 	}
 
-	@Transactional(readOnly = true)
 	@Override
 	public Flux<List<Long>> getListOfUserIdOfAgendaAndSelectOption(Long agendaId, Long selectOptionId) {
 		return checkOngoingSecretVote(agendaId)
