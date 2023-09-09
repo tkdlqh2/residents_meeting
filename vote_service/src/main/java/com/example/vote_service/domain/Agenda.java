@@ -2,16 +2,16 @@ package com.example.vote_service.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Agenda extends BaseEntity {
 
@@ -33,19 +33,6 @@ public class Agenda extends BaseEntity {
 	@Temporal(TemporalType.DATE)
 	private LocalDate endDate;
 
-	@Builder
-	public Agenda(Long id,
-					 String apartmentCode,
-					 String title,
-					 String details,
-					 LocalDate endDate,
-				  	LocalDateTime createdAt,
-				  	LocalDateTime updatedAt) {
-		super(createdAt, updatedAt);
-		this.id = id;
-		this.apartmentCode = apartmentCode;
-		this.title = title;
-		this.details = details;
-		this.endDate = endDate;
-	}
+	@Column
+	private boolean secret;
 }

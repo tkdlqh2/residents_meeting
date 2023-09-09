@@ -21,6 +21,8 @@ public class AgendaHistory {
 	@JsonIgnore
 	private Long id;
 	@Column
+	private String apartmentCode;
+	@Column
 	private String title;
 	@Column
 	@Lob
@@ -34,7 +36,9 @@ public class AgendaHistory {
 	List<SelectOptionHistory> selectOptions;
 
 	@Builder
-	public AgendaHistory(String title, String details, LocalDate endDate, List<SelectOptionHistory> selectOptions) {
+	public AgendaHistory(Long id, String apartmentCode, String title, String details, LocalDate endDate, List<SelectOptionHistory> selectOptions) {
+		this.id = id;
+		this.apartmentCode = apartmentCode;
 		this.title = title;
 		this.details = details;
 		this.endDate = endDate;

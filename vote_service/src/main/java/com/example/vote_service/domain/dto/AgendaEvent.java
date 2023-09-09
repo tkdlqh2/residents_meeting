@@ -22,6 +22,7 @@ public class AgendaEvent extends Event {
 			String title,
 			String details,
 			LocalDate endDate,
+			Boolean secret,
 			LocalDateTime createdAt,
 			LocalDateTime updatedAt,
 			List<SelectOptionPayload> selectOptionPayloadList
@@ -33,6 +34,7 @@ public class AgendaEvent extends Event {
 					creationDTO.title(),
 					creationDTO.details(),
 					creationDTO.endDate(),
+					creationDTO.secret(),
 					LocalDateTime.now(),
 					null,
 					creationDTO.selectOptionCreationDtoList().stream()

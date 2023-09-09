@@ -15,6 +15,8 @@ public record AgendaCreationDTO(
 		@Future
 		@NotNull
 		LocalDate endDate,
+		@NotNull
+		Boolean secret,
 		@NotEmpty
 		List<SelectOptionCreationDto> selectOptionCreationDtoList
 ) {
