@@ -113,7 +113,7 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 						.title((String) result.get("title"))
 						.details((String) result.get("details"))
 						.endDate((LocalDate) result.get("end_date"))
-						.secret(result.get("secret") == null ? true : (Byte)result.get("agendaSecret") == 1)
+						.secret(result.get("secret") == null ? true : (Byte)result.get("secret") == 1)
 						.createdAt(result.get("created_time") == null ?
 								null : ((ZonedDateTime) result.get("created_time")).toLocalDateTime())
 						.updatedAt(result.get("updated_time") == null ?

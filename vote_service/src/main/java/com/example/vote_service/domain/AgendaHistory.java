@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "AGENDA_HISTORY")
-public class AgendaHistory {
+public class AgendaHistory extends BaseEntity {
 
 	@Id
 	@JsonIgnore

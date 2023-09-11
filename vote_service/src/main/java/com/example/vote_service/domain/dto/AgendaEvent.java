@@ -12,8 +12,8 @@ public class AgendaEvent extends Event {
 		super("agenda_sink", agendaPayload);
 	}
 
-	public static AgendaEvent from(AgendaCreationDTO creationDTO) {
-		return new AgendaEvent(new AgendaPayload(creationDTO));
+	public static AgendaEvent from(AgendaCreationDTO creationDTO, String apartmentCode) {
+		return new AgendaEvent(new AgendaPayload(creationDTO, apartmentCode));
 	}
 
 	private record AgendaPayload(
@@ -28,9 +28,9 @@ public class AgendaEvent extends Event {
 			List<SelectOptionPayload> selectOptionPayloadList
 
 	) {
-		public AgendaPayload(AgendaCreationDTO creationDTO) {
+		public AgendaPayload(AgendaCreationDTO creationDTO, String apartmentCode) {
 			this(null,
-					creationDTO.apartmentCode(),
+					apartmentCode,
 					creationDTO.title(),
 					creationDTO.details(),
 					creationDTO.endDate(),

@@ -33,7 +33,12 @@ public class AgendaServiceImpl implements AgendaService {
 	@Override
 	public Mono<Boolean> createAgenda(AgendaCreationDTO creationDTO) {
 		return Mono.just(creationDTO)
-				.mapNotNull(AgendaEvent::from)
+				.transformDeferredContextual((mono, contextView) -> mono.zipWith(Mono.just(contextView.get("user"))))
+				.mapNotNull(tuple -> {
+					AgendaCreationDTO agendaCreationDTO = tuple.getT1();
+					String apartmentCode = ((UserInfo) tuple.getT2()).address().apartmentCode();
+					return AgendaEvent.from(agendaCreationDTO,apartmentCode);
+				}).switchIfEmpty(Mono.error(() -> new VoteException(VoteExceptionCode.NO_RIGHT_FOR)))
 				.flatMap(kafkaProducer::send)
 				.map(MessageProduceResult::getStatus);
 	}

@@ -46,7 +46,6 @@ class AgendaServiceImplTest {
 				new SelectOptionCreationDto("반대", "반대입니다.")
 		);
 		AgendaCreationDTO creationDTO = new AgendaCreationDTO(
-				"A12345678",
 				"제목",
 				"설명",
 				LocalDate.now().plusDays(3),
@@ -55,7 +54,7 @@ class AgendaServiceImplTest {
 		);
 
 		given(kafkaProducer.send(any(AgendaEvent.class)))
-				.willReturn(Mono.just(new MessageProduceResult(AgendaEvent.from(creationDTO))));
+				.willReturn(Mono.just(new MessageProduceResult(AgendaEvent.from(creationDTO, "A12345678"))));
 
 		//when & then
 		StepVerifier.create(agendaService.createAgenda(creationDTO))
@@ -73,7 +72,6 @@ class AgendaServiceImplTest {
 				new SelectOptionCreationDto("반대", "반대입니다.")
 		);
 		AgendaCreationDTO creationDTO = new AgendaCreationDTO(
-				"A12345678",
 				"제목",
 				"설명",
 				LocalDate.now().plusDays(3),
@@ -82,7 +80,7 @@ class AgendaServiceImplTest {
 		);
 
 		given(kafkaProducer.send(any(AgendaEvent.class)))
-				.willReturn(Mono.just(new MessageProduceResult(AgendaEvent.from(creationDTO), new RuntimeException())));
+				.willReturn(Mono.just(new MessageProduceResult(AgendaEvent.from(creationDTO, "A12345678"), new RuntimeException())));
 
 		//when & then
 		StepVerifier.create(agendaService.createAgenda(creationDTO))
