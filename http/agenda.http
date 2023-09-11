@@ -2,10 +2,9 @@
 ### 1. 안건 생성
 POST {{gateway-url}}/api/agenda/
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiTUVNQkVSIl0sImlhdCI6MTY5NDI2OTU1NiwiZXhwIjoxNjk0MzU1OTU2fQ.h1QWdofPihFjFfdKMn7S8d-ZTy_N2WRWD8H7rSkNM9PKpwonChJPVutttu67qfqo32r1r4Oc47uGaFqK9AmDLA
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDM1MDY4LCJleHAiOjE2OTQ1MjE0Njh9.sPj_B33wAXrEbtwYql-PbjwbMXDe_GY2ZQPyEgwp_ndAh-IKmqZL8aG37a4imsDIZ98VsRUrbyVEqqRutr3xqQ
 
 {
-  "apartmentCode": "A12345678",
   "title": "제목",
   "details": "설명",
   "endDate": "2023-10-02",
@@ -25,4 +24,4 @@ Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsi
 ### 2. 안건 조회
 GET {{gateway-url}}/api/agenda/1
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiTUVNQkVSIl0sImlhdCI6MTY5NDI2OTU1NiwiZXhwIjoxNjk0MzU1OTU2fQ.h1QWdofPihFjFfdKMn7S8d-ZTy_N2WRWD8H7rSkNM9PKpwonChJPVutttu67qfqo32r1r4Oc47uGaFqK9AmDLA
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDM1MDY4LCJleHAiOjE2OTQ1MjE0Njh9.sPj_B33wAXrEbtwYql-PbjwbMXDe_GY2ZQPyEgwp_ndAh-IKmqZL8aG37a4imsDIZ98VsRUrbyVEqqRutr3xqQ

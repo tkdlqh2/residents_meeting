@@ -1,6 +1,8 @@
 package com.example.vote_service.config;
 
 import com.example.vote_service.domain.AuthTokenHolder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -24,5 +26,12 @@ public class Config {
 	@RequestScope
 	public RequestContextHolder requestContextHolder() {
 		return new AuthTokenHolder();
+	}
+
+	@Bean
+	public ObjectMapper objectMapper() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JavaTimeModule());
+		return mapper;
 	}
 }

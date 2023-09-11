@@ -1,9 +1,11 @@
 package com.example.scheduler_and_consumer.domain;
 
+import com.example.scheduler_and_consumer.domain.dto.AgendaPayload;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Builder
 @Entity
@@ -32,4 +34,17 @@ public class Agenda extends BaseEntity {
 
 	@Column
 	private boolean secret;
+
+	@OneToMany(mappedBy = "agenda")
+	private List<SelectOption> selectOptions;
+
+	public static Agenda from(AgendaPayload payload) {
+		return Agenda.builder()
+				.apartmentCode(payload.apartmentCode())
+				.title(payload.title())
+				.details(payload.details())
+				.endDate(payload.endDate())
+				.secret(payload.secret())
+				.build();
+	}
 }

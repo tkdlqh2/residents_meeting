@@ -82,7 +82,7 @@ class VoteServiceImplTest {
 		StepVerifier.create(voteService.createVote(voteCreationDto).contextWrite(
 						context -> context.put("user",userInfo)
 				))
-				.expectNext(true)
+				.expectNextMatches(messageProduceResult -> messageProduceResult.getStatus())
 				.verifyComplete();
 	}
 
@@ -128,7 +128,7 @@ class VoteServiceImplTest {
 		StepVerifier.create(voteService.createVote(voteCreationDto).contextWrite(
 						context -> context.put("user", userInfo
 						)))
-				.expectNext(false)
+				.expectNextMatches(messageProduceResult -> !messageProduceResult.getStatus())
 				.verifyComplete();
 	}
 

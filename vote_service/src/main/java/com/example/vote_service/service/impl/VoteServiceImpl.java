@@ -1,7 +1,10 @@
 package com.example.vote_service.service.impl;
 
 import com.example.vote_service.UserInfo;
-import com.example.vote_service.domain.dto.*;
+import com.example.vote_service.domain.dto.AgendaVo;
+import com.example.vote_service.domain.dto.VoteCreationDto;
+import com.example.vote_service.domain.dto.VoteEvent;
+import com.example.vote_service.domain.dto.VoteHistory;
 import com.example.vote_service.exception.VoteException;
 import com.example.vote_service.exception.VoteExceptionCode;
 import com.example.vote_service.messagequeue.KafkaProducer;
@@ -37,7 +40,7 @@ public class VoteServiceImpl implements VoteService {
 
 	@Override
 	@Transactional
-	public Mono<Boolean> createVote(VoteCreationDto voteCreationDto) {
+	public Mono<MessageProduceResult> createVote(VoteCreationDto voteCreationDto) {
 		return Mono.just(voteCreationDto)
 				.flatMap(voteCreation -> agendaCustomRepository.findBySelectOptionId(voteCreation.selectOptionId()))
 				.switchIfEmpty(Mono.error(new VoteException(VoteExceptionCode.AGENDA_NOT_FOUND)))
@@ -53,8 +56,7 @@ public class VoteServiceImpl implements VoteService {
 					return mono.zipWith(Mono.just(userInfo));
 				})
 				.map(tuple -> VoteEvent.toEvent(voteCreationDto, tuple.getT2().id()))
-				.flatMap(kafkaProducer::send)
-				.map(MessageProduceResult::getStatus);
+				.flatMap(kafkaProducer::send);
 		}
 
 	@Override

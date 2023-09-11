@@ -3,6 +3,7 @@ package com.example.vote_service.controller;
 import com.example.vote_service.domain.dto.VoteCreationDto;
 import com.example.vote_service.domain.dto.VoteHistory;
 import com.example.vote_service.filter.Authorize;
+import com.example.vote_service.messagequeue.MessageProduceResult;
 import com.example.vote_service.otherservice.UserService;
 import com.example.vote_service.service.VoteService;
 import org.springframework.http.MediaType;
@@ -29,7 +30,7 @@ public class VoteController {
 
 	@Authorize(role = HOUSE_LEADER)
 	@PostMapping("/")
-	public Mono<Boolean> vote(@RequestBody @Validated VoteCreationDto creationDto) {
+	public Mono<MessageProduceResult> vote(@RequestBody @Validated VoteCreationDto creationDto) {
 		return voteService.createVote(creationDto);
 	}
 

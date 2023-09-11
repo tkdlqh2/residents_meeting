@@ -57,14 +57,20 @@ class AgendaServiceImplTest {
 				.willReturn(Mono.just(new MessageProduceResult(AgendaEvent.from(creationDTO, "A12345678"))));
 
 		//when & then
-		StepVerifier.create(agendaService.createAgenda(creationDTO))
-				.expectNext(true)
+		StepVerifier.create(agendaService.createAgenda(creationDTO)
+				.contextWrite(context -> context.put("user", new UserInfo(1L,
+						null,
+						null,
+						null,
+						new UserInfo.Address("A12345678", 0, 0),
+						null))))
+				.expectNextMatches(result -> result.getStatus())
 				.verifyComplete();
 
 	}
 
 	@Test
-	@DisplayName("안건 생성 성공 - KafkaProducer 에서 실패하면 false 를 반환한다")
+	@DisplayName("안건 생성 실패 - KafkaProducer 에서 실패하면 false 를 반환한다")
 	void createAgendaFail() {
 		//given
 		List<SelectOptionCreationDto> selectOptionCreationDtoList = List.of(
@@ -83,8 +89,14 @@ class AgendaServiceImplTest {
 				.willReturn(Mono.just(new MessageProduceResult(AgendaEvent.from(creationDTO, "A12345678"), new RuntimeException())));
 
 		//when & then
-		StepVerifier.create(agendaService.createAgenda(creationDTO))
-				.expectNext(false)
+		StepVerifier.create(agendaService.createAgenda(creationDTO)
+						.contextWrite(context -> context.put("user", new UserInfo(1L,
+								null,
+								null,
+								null,
+								new UserInfo.Address("A12345678", 0, 0),
+								null))))
+				.expectNextMatches(result -> !result.getStatus())
 				.verifyComplete();
 	}
 
