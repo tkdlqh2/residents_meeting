@@ -6,9 +6,9 @@ server:
   ## Mysql Configs
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/batch_process
-    username: {username}
-    password: {password}
+    url: jdbc:mysql://localhost:3306/resident
+    username: root
+    password: zerobase
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate: use-new-id-generator-mappings=false
