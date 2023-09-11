@@ -23,8 +23,12 @@ public class UserInfoFilter implements WebFilter {
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", exchange.getRequest().getHeaders().getFirst("Authorization"));
+		String uri = exchange.getRequest().getURI().toString();
+		if(!uri.contains("/api/vote") && !uri.contains("/api/agenda")) {
+			return chain.filter(exchange);
+		}
 
+		headers.set("Authorization", exchange.getRequest().getHeaders().getFirst("Authorization"));
 		UserInfo userInfo = restTemplate.exchange("http://localhost:8000/api/user/",
 				HttpMethod.GET,
 				new HttpEntity<>(headers),
