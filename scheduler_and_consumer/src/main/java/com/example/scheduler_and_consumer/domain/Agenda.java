@@ -35,7 +35,7 @@ public class Agenda extends BaseEntity {
 	@Column
 	private boolean secret;
 
-	@OneToMany(mappedBy = "agenda")
+	@OneToMany(mappedBy = "agenda", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	private List<SelectOption> selectOptions;
 
 	public static Agenda from(AgendaPayload payload) {

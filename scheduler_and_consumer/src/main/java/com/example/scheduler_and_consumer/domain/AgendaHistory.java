@@ -16,7 +16,7 @@ public class AgendaHistory extends BaseEntity {
 	@Id
 	@JsonIgnore
 	private Long id;
-	@Column
+	@Column(name = "apartment_code")
 	private String apartmentCode;
 	@Column
 	private String title;
@@ -27,18 +27,24 @@ public class AgendaHistory extends BaseEntity {
 	@Column(name = "end_date")
 	private LocalDate endDate;
 
-	@OneToMany
-	@JoinColumn(name = "agenda_id")
-	List<SelectOptionHistory> selectOptions;
-
 	@Builder
-	public AgendaHistory(Long id, String apartmentCode, String title, String details, LocalDate endDate, List<SelectOptionHistory> selectOptions) {
+	private AgendaHistory(Long id, String apartmentCode, String title, String details, LocalDate endDate) {
 		this.id = id;
 		this.apartmentCode = apartmentCode;
 		this.title = title;
 		this.details = details;
 		this.endDate = endDate;
-		this.selectOptions = selectOptions;
+	}
+
+	public static AgendaHistory from(Agenda a){
+
+		return AgendaHistory.builder()
+				.id(a.getId())
+				.apartmentCode(a.getApartmentCode())
+				.title(a.getTitle())
+				.details(a.getDetails())
+				.endDate(a.getEndDate())
+				.build();
 	}
 
 	protected AgendaHistory() {

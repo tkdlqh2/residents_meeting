@@ -14,6 +14,7 @@ public class SelectOptionHistory {
 	@Id
 	@JsonIgnore
 	private Long id;
+	private Long agendaId;
 	@Column(nullable = false)
 	private String summary;
 	private String details;
@@ -24,9 +25,21 @@ public class SelectOptionHistory {
 	}
 
 	@Builder
-	public SelectOptionHistory(String summary, String details, Integer count) {
+	private SelectOptionHistory(Long id, Long agendaId, String summary, String details, Integer count) {
+		this.id = id;
+		this.agendaId = agendaId;
 		this.summary = summary;
 		this.details = details;
 		this.count = count;
+	}
+
+	public static SelectOptionHistory from(SelectOption s, Integer count){
+		return SelectOptionHistory.builder()
+				.id(s.getId())
+				.agendaId(s.getAgenda().getId())
+				.summary(s.getSummary())
+				.details(s.getDetails())
+				.count(count)
+				.build();
 	}
 }
