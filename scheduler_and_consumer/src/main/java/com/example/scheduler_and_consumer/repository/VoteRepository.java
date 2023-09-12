@@ -10,8 +10,8 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 	@Query("""
 			SELECT count(v.userId) as voteCount
 			FROM Vote as v
-			WHERE (v.userId, v.createdTime) IN (
-				SELECT v2.userId, MAX(v2.createdTime)
+			WHERE (v.userId, v.createdAt) IN (
+				SELECT v2.userId, MAX(v2.createdAt)
 				FROM Vote v2
 				WHERE v2.selectOptionId IN (
 					SELECT s.id FROM SelectOption s 
@@ -21,7 +21,6 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 				GROUP BY v2.userId
 			) and v.selectOptionId = :selectOptionId
 			GROUP BY v.selectOptionId
-			
 	""")
 	Integer countLastById(Long selectOptionId);
 }

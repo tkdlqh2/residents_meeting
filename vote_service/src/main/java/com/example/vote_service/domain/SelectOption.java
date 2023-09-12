@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,8 +26,7 @@ public class SelectOption extends BaseEntity {
 	private String details;
 
 	@Builder
-	public SelectOption(Long id, Long agendaId, String summary, String details, LocalDateTime createdAt, LocalDateTime updatedAt) {
-		super(createdAt, updatedAt);
+	protected SelectOption(Long id, Long agendaId, String summary, String details) {
 		this.id = id;
 		this.agendaId = agendaId;
 		this.summary = summary;
@@ -37,6 +34,6 @@ public class SelectOption extends BaseEntity {
 	}
 
 	public static SelectOption from(Agenda agenda, SelectOptionCreationDto creationDto) {
-		return new SelectOption(null, agenda.getId(), creationDto.summary(), creationDto.details(), LocalDateTime.now(), null);
+		return new SelectOption(null, agenda.getId(), creationDto.summary(), creationDto.details());
 	}
 }

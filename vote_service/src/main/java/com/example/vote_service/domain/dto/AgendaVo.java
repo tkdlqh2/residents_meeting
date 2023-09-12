@@ -15,7 +15,6 @@ public record AgendaVo(Long id,
 					   LocalDate endDate,
 					   boolean secret,
 					   LocalDateTime createdAt,
-					   LocalDateTime updatedAt,
 					   List<SelectOptionVo> selectOptionList) {
 	public AgendaHistory toAgendaHistory() {
 

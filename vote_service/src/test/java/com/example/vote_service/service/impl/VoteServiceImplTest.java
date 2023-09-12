@@ -63,9 +63,8 @@ class VoteServiceImplTest {
 						LocalDate.now().plusDays(3),
 						true,
 						null,
-						null,
-						List.of(new SelectOptionVo(1L,agendaId , "찬성","찬성입니다.",null,null),
-								new SelectOptionVo(2L,agendaId , "반대","반대입니다.",null,null)))
+						List.of(new SelectOptionVo(1L,agendaId , "찬성","찬성입니다."),
+								new SelectOptionVo(2L,agendaId , "반대","반대입니다.")))
 						));
 
 		given(kafkaProducer.send(any()))
@@ -104,9 +103,8 @@ class VoteServiceImplTest {
 						LocalDate.now().plusDays(3),
 						true,
 						null,
-						null,
-						List.of(new SelectOptionVo(1L,agendaId , "찬성","찬성입니다.",null,null),
-								new SelectOptionVo(2L,agendaId , "반대","반대입니다.",null,null)))
+						List.of(new SelectOptionVo(1L,agendaId , "찬성","찬성입니다."),
+								new SelectOptionVo(2L,agendaId , "반대","반대입니다.")))
 				));
 
 
@@ -179,9 +177,8 @@ class VoteServiceImplTest {
 						LocalDate.now().plusDays(3),
 						true,
 						null,
-						null,
-						List.of(new SelectOptionVo(1L,agendaId , "찬성","찬성입니다.",null,null),
-								new SelectOptionVo(2L,agendaId , "반대","반대입니다.",null,null)))
+						List.of(new SelectOptionVo(1L,agendaId , "찬성","찬성입니다."),
+								new SelectOptionVo(2L,agendaId , "반대","반대입니다.")))
 				));
 
 		VoteCreationDto voteCreationDto = new VoteCreationDto(selectOptionId);
@@ -220,9 +217,8 @@ class VoteServiceImplTest {
 						LocalDate.now().minusDays(1),
 						true,
 						null,
-						null,
-						List.of(new SelectOptionVo(1L,agendaId , "찬성","찬성입니다.",null,null),
-								new SelectOptionVo(2L,agendaId , "반대","반대입니다.",null,null)))
+						List.of(new SelectOptionVo(1L,agendaId , "찬성","찬성입니다."),
+								new SelectOptionVo(2L,agendaId , "반대","반대입니다.")))
 				));
 
 		VoteCreationDto voteCreationDto = new VoteCreationDto(selectOptionId);
@@ -323,13 +319,12 @@ class VoteServiceImplTest {
 						LocalDate.now().minusDays(1),
 						true,
 						null,
-						null,
 						Collections.emptyList())));
 
 		given(selectOptionHistoryRepository.findCountById(selectOptionId))
 				.willReturn(Mono.just(voteCount));
 
-		given(voteRepository.findVoteCountOfSelectOptionId(agendaId,selectOptionId))
+		given(voteRepository.findVoteCountOfSelectOptionId(selectOptionId))
 				.willReturn(Mono.empty());
 
 		UserInfo userInfo =  new UserInfo(userId,
@@ -364,7 +359,6 @@ class VoteServiceImplTest {
 						"설명",
 						LocalDate.now(),
 						true,
-						null,
 						null,
 						Collections.emptyList())));
 
@@ -404,10 +398,9 @@ class VoteServiceImplTest {
 						LocalDate.now(),
 						false,
 						null,
-						null,
 						Collections.emptyList())));
 
-		given(voteRepository.findVoteCountOfSelectOptionId(agendaId,selectOptionId))
+		given(voteRepository.findVoteCountOfSelectOptionId(selectOptionId))
 				.willReturn(Mono.just(voteCount));
 
 		UserInfo userInfo =  new UserInfo(userId,
@@ -446,7 +439,6 @@ class VoteServiceImplTest {
 						LocalDate.now(),
 						false,
 						null,
-						null,
 						Collections.emptyList())));
 
 		UserInfo userInfo =  new UserInfo(userId,
@@ -484,10 +476,9 @@ class VoteServiceImplTest {
 						LocalDate.now().minusDays(1),
 						false,
 						null,
-						null,
 						Collections.emptyList())));
 
-		given(voteRepository.findUserIdsByAgendaIdAndId(agendaId, selectOptionId))
+		given(voteRepository.findUserIdsBySelectOptionId(selectOptionId))
 				.willReturn(Flux.fromIterable(List.of(1L,3L,5L)));
 
 		UserInfo userInfo =  new UserInfo(userId,
@@ -522,7 +513,6 @@ class VoteServiceImplTest {
 						"설명",
 						LocalDate.now(),
 						true,
-						null,
 						null,
 						Collections.emptyList())));
 
@@ -561,10 +551,9 @@ class VoteServiceImplTest {
 						LocalDate.now(),
 						false,
 						null,
-						null,
 						Collections.emptyList())));
 
-		given(voteRepository.findUserIdsByAgendaIdAndId(agendaId,selectOptionId))
+		given(voteRepository.findUserIdsBySelectOptionId(selectOptionId))
 				.willReturn(Flux.fromIterable(List.of(1L,3L,5L)));
 
 		UserInfo userInfo =  new UserInfo(userId,

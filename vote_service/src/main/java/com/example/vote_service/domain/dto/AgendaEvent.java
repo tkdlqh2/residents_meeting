@@ -17,14 +17,13 @@ public class AgendaEvent extends Event {
 	}
 
 	private record AgendaPayload(
-			Long Id,
+			Long id,
 			String apartmentCode,
 			String title,
 			String details,
 			LocalDate endDate,
 			Boolean secret,
 			LocalDateTime createdAt,
-			LocalDateTime updatedAt,
 			List<SelectOptionPayload> selectOptionPayloadList
 
 	) {
@@ -36,7 +35,6 @@ public class AgendaEvent extends Event {
 					creationDTO.endDate(),
 					creationDTO.secret(),
 					LocalDateTime.now(),
-					null,
 					creationDTO.selectOptionCreationDtoList().stream()
 							.map(SelectOptionPayload::new).toList());
 		}
@@ -46,10 +44,11 @@ public class AgendaEvent extends Event {
 	private record SelectOptionPayload(
 			Long id,
 			String summary,
-			String details
+			String details,
+			LocalDateTime createdAt
 	){
 		public SelectOptionPayload(SelectOptionCreationDto creationDto) {
-			this(null, creationDto.summary(), creationDto.details());
+			this(null, creationDto.summary(), creationDto.details(), LocalDateTime.now());
 		}
 	}
 }

@@ -5,12 +5,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
-@Builder
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Agenda extends BaseEntity {
 
@@ -35,6 +34,25 @@ public class Agenda extends BaseEntity {
 	@Column
 	private boolean secret;
 
+	@Builder
+	public Agenda(LocalDateTime createdTime,
+				  Long id,
+				  String apartmentCode,
+				  String title,
+				  String details,
+				  LocalDate endDate,
+				  boolean secret,
+				  List<SelectOption> selectOptions) {
+		super(createdTime);
+		this.id = id;
+		this.apartmentCode = apartmentCode;
+		this.title = title;
+		this.details = details;
+		this.endDate = endDate;
+		this.secret = secret;
+		this.selectOptions = selectOptions;
+	}
+
 	@OneToMany(mappedBy = "agenda", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	private List<SelectOption> selectOptions;
 
@@ -45,6 +63,7 @@ public class Agenda extends BaseEntity {
 				.details(payload.details())
 				.endDate(payload.endDate())
 				.secret(payload.secret())
+				.createdTime(payload.createdAt())
 				.build();
 	}
 }

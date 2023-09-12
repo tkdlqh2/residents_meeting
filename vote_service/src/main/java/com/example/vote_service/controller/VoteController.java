@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.example.vote_service.UserInfo.UserRole.HOUSE_LEADER;
@@ -51,6 +52,11 @@ public class VoteController {
 	public Flux<List> getListOfUserOfSelectOption(@PathVariable Long agendaId, @PathVariable Long selectOptionId) {
 
 		return voteService.getListOfUserIdOfAgendaAndSelectOption(agendaId, selectOptionId)
-				.flatMap(userService::getUserEmails);
+				.flatMap(userIds -> {
+					if (userIds.isEmpty()) {
+						return Mono.just(Collections.emptyList());
+					}
+					return userService.getUserEmails(userIds);
+				});
 	}
 }

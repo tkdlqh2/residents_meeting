@@ -115,8 +115,8 @@ class AgendaServiceImplTest {
 				.endDate(LocalDate.now().minusDays(3))
 				.selectOptions(
 						List.of(
-								new SelectOptionHistory("찬성", "찬성입니다.", 1),
-								new SelectOptionHistory("반대", "반대입니다.", 2)
+								new SelectOptionHistory(agendaId,"찬성", "찬성입니다.", 1),
+								new SelectOptionHistory(agendaId,"반대", "반대입니다.", 2)
 						)
 				)
 				.build();
@@ -157,8 +157,8 @@ class AgendaServiceImplTest {
 								.secret(false)
 								.selectOptionList(
 										List.of(
-												new SelectOptionVo(1L,agendaId,"찬성", "찬성입니다.", null,null),
-												new SelectOptionVo(2L,agendaId,"반대", "반대입니다.", null,null)
+												new SelectOptionVo(1L,agendaId,"찬성", "찬성입니다." ),
+												new SelectOptionVo(2L,agendaId,"반대", "반대입니다.")
 										)
 								)
 						.build()));
@@ -233,8 +233,8 @@ class AgendaServiceImplTest {
 				.endDate(LocalDate.now().minusDays(3))
 				.selectOptions(
 						List.of(
-								new SelectOptionHistory("찬성", "찬성입니다.", 1),
-								new SelectOptionHistory("반대", "반대입니다.", 2)
+								new SelectOptionHistory(agendaId,"찬성", "찬성입니다.", 1),
+								new SelectOptionHistory(agendaId,"반대", "반대입니다.", 2)
 						)
 				)
 				.build();

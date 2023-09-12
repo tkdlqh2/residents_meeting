@@ -7,6 +7,6 @@ import reactor.core.publisher.Mono;
 public interface VoteCustomRepository {
 
 	Mono<VoteHistory> findVoteHistoryByUserIdAndAgendaId(Long userId, Long agendaId);
-	Mono<Integer> findVoteCountOfSelectOptionId(Long agendaId, Long selectOptionId);
-	Flux<Long> findUserIdsByAgendaIdAndId(Long agendaId, Long selectOptionId);
+	Mono<Integer> findVoteCountOfSelectOptionId(Long selectOptionId);
+	Flux<Long> findUserIdsBySelectOptionId(Long selectOptionId);
 }

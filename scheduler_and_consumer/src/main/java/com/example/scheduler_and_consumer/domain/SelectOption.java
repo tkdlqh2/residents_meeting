@@ -26,8 +26,8 @@ public class SelectOption extends BaseEntity {
 	@Lob
 	private String details;
 
-	private SelectOption(Long id, Agenda agenda, String summary, String details, LocalDateTime createdAt, LocalDateTime updatedAt) {
-		super(createdAt, updatedAt);
+	private SelectOption(Long id, Agenda agenda, String summary, String details, LocalDateTime createdAt) {
+		super(createdAt);
 		this.id = id;
 		this.agenda = agenda;
 		this.summary = summary;
@@ -35,6 +35,6 @@ public class SelectOption extends BaseEntity {
 	}
 
 	public static SelectOption from(Agenda agenda, AgendaPayload.SelectOptionPayload payload) {
-		return new SelectOption(null, agenda, payload.summary(), payload.details(), LocalDateTime.now(), null);
+		return new SelectOption(null, agenda, payload.summary(), payload.details(), payload.createdAt());
 	}
 }

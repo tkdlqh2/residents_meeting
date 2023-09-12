@@ -8,12 +8,14 @@ import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 
+
 @Getter
 @Entity
-public class SelectOptionHistory {
+public class SelectOptionHistory extends BaseEntity {
 	@Id
 	@JsonIgnore
 	private Long id;
+	private Long agendaId;
 	@Column(nullable = false)
 	private String summary;
 	private String details;
@@ -24,7 +26,8 @@ public class SelectOptionHistory {
 	}
 
 	@Builder
-	public SelectOptionHistory(String summary, String details, Integer count) {
+	public SelectOptionHistory(Long agendaId, String summary, String details, Integer count) {
+		this.agendaId = agendaId;
 		this.summary = summary;
 		this.details = details;
 		this.count = count;

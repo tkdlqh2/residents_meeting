@@ -23,8 +23,7 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 
 		String sql = """
 				SELECT a.id AS agendaId, a.apartment_code AS apartmentCode, a.title AS agendaTitle, 
-    			a.details AS agendaDetails, a.end_date AS agendaEndDate, a.secret as agendaSecret, a.created_time AS agendaCreatedTime,
-    			a.updated_time AS agendaUpdatedTime
+    			a.details AS agendaDetails, a.end_date AS agendaEndDate, a.secret as agendaSecret, a.created_at AS agendaCreatedAt
 				FROM Agenda a 
 				WHERE a.id = :id
 				""";
@@ -37,11 +36,9 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 						.title((String) result.get("agendaTitle"))
 						.details((String) result.get("agendaDetails"))
 						.endDate((LocalDate) result.get("agendaEndDate"))
-						.secret(result.get("agendaSecret") == null ? true : (Byte)result.get("agendaSecret") == 1)
-						.createdAt(result.get("agendaCreatedTime") == null ?
-								null : ((ZonedDateTime) result.get("agendaCreatedTime")).toLocalDateTime())
-						.updatedAt(result.get("agendaUpdatedTime") == null ?
-								null : ((ZonedDateTime) result.get("agendaUpdatedTime")).toLocalDateTime())
+						.secret(result.get("agendaSecret") == null || (Byte)result.get("agendaSecret") == 1)
+						.createdAt(result.get("agendaCreatedAt") == null ?
+								null : ((ZonedDateTime) result.get("agendaCreatedAt")).toLocalDateTime())
 						.build());
 	}
 
@@ -51,9 +48,9 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 		String sqlWithSelectOption =
     		"""
     			SELECT a.id AS agendaId, a.apartment_code AS apartmentCode, a.title AS agendaTitle, 
-    			a.details AS agendaDetails, a.end_date AS agendaEndDate, a.secret as agendaSecret, a.created_time AS agendaCreatedTime,
-    			a.updated_time AS agendaUpdatedTime, s.id AS selectOptionId, s.summary AS selectOptionSummary,
-    			s.details AS selectOptionDetails, s.created_time AS selectOptionCreatedTime, s.updated_time As selectOptionUpdatedTime
+    			a.details AS agendaDetails, a.end_date AS agendaEndDate, a.secret as agendaSecret, a.created_at AS agendaCreatedTime,
+    			s.id AS selectOptionId, s.summary AS selectOptionSummary,
+    			s.details AS selectOptionDetails
 				FROM Agenda a 
 				JOIN select_option s
 				ON a.id = s.agenda_id
@@ -68,13 +65,9 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 					var selectOptions = result.stream()
 							.map(row -> new SelectOptionVo(
 									(Long) row.get("selectOptionId"),
-									null,
+									id,
 									(String) row.get("selectOptionSummary"),
-									(String) row.get("selectOptionDetails"),
-									row.get("selectOptionCreatedTime") == null ?
-											null : ((ZonedDateTime)row.get("selectOptionCreatedTime")).toLocalDateTime(),
-									row.get("selectOptionUpdatedTime") == null ?
-											null : ((ZonedDateTime)row.get("selectOptionUpdatedTime")).toLocalDateTime()))
+									(String) row.get("selectOptionDetails")))
 							.toList();
 					var row = result.get(0);
 
@@ -84,11 +77,9 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 							.title((String) row.get("agendaTitle"))
 							.details((String) row.get("agendaDetails"))
 							.endDate((LocalDate) row.get("agendaEndDate"))
-							.secret(row.get("agendaSecret") == null ? true : (Byte)row.get("agendaSecret") == 1)
+							.secret(row.get("agendaSecret") == null || (Byte)row.get("agendaSecret") == 1)
 							.createdAt(row.get("agendaCreatedTime") == null ?
 									null : ((ZonedDateTime) row.get("agendaCreatedTime")).toLocalDateTime())
-							.updatedAt(row.get("agendaUpdatedTime") == null ?
-									null : ((ZonedDateTime) row.get("agendaUpdatedTime")).toLocalDateTime())
 							.selectOptionList(selectOptions)
 							.build();
 				});
@@ -97,7 +88,7 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 	@Override
 	public Mono<AgendaVo> findBySelectOptionId(Long selectOptionId) {
 		String sql = """
-				SELECT a.id, a.apartment_code, a.title, a.details, a.end_date,a.secret, a.created_time, a.updated_time
+				SELECT a.id, a.apartment_code, a.title, a.details, a.end_date,a.secret, a.created_at
 				FROM agenda a
 				JOIN select_option s
 				ON a.id = s.agenda_id
@@ -113,11 +104,9 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 						.title((String) result.get("title"))
 						.details((String) result.get("details"))
 						.endDate((LocalDate) result.get("end_date"))
-						.secret(result.get("secret") == null ? true : (Byte)result.get("secret") == 1)
+						.secret(result.get("secret") == null || (Byte)result.get("secret") == 1)
 						.createdAt(result.get("created_time") == null ?
 								null : ((ZonedDateTime) result.get("created_time")).toLocalDateTime())
-						.updatedAt(result.get("updated_time") == null ?
-								null : ((ZonedDateTime) result.get("updated_time")).toLocalDateTime())
 						.build());
 	}
 

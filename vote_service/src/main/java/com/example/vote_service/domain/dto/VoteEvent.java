@@ -1,8 +1,9 @@
 package com.example.vote_service.domain.dto;
 
 import com.example.vote_service.messagequeue.Event;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 @Getter
 public class VoteEvent extends Event {
@@ -12,14 +13,13 @@ public class VoteEvent extends Event {
 	}
 
 	public static VoteEvent toEvent(VoteCreationDto voteCreationDto, Long userId) {
-		return new VoteEvent(new VotePayload(voteCreationDto.selectOptionId(), userId));
+		return new VoteEvent(new VotePayload(voteCreationDto.selectOptionId(), userId, LocalDateTime.now()));
 	}
 
 	private record VotePayload(
-			@JsonProperty("select_option_id")
 			Long selectOptionId,
-			@JsonProperty("user_id")
-			Long userId
+			Long userId,
+			LocalDateTime createdAt
 	) {
 	}
 }

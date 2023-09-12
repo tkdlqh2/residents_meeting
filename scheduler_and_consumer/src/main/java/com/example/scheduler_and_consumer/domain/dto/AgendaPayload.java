@@ -5,21 +5,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record AgendaPayload(
-		Long Id,
+		Long id,
 		String apartmentCode,
 		String title,
 		String details,
 		LocalDate endDate,
 		Boolean secret,
 		LocalDateTime createdAt,
-		LocalDateTime updatedAt,
 		List<SelectOptionPayload> selectOptionPayloadList
 
 ) {
 	public record SelectOptionPayload(
 			Long id,
 			String summary,
-			String details
+			String details,
+			LocalDateTime createdAt
 	) {
 	}
 }

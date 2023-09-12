@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -77,7 +78,7 @@ public class VoteServiceImpl implements VoteService {
 					if (LocalDate.now().isAfter(agendaVo.endDate())) {
 						return selectOptionHistoryRepository
 								.findCountById(selectOptionId)
-								.switchIfEmpty(voteRepository.findVoteCountOfSelectOptionId(agendaId, selectOptionId))
+								.switchIfEmpty(voteRepository.findVoteCountOfSelectOptionId(selectOptionId))
 								.switchIfEmpty(Mono.just(0));
 					} else if(agendaVo.secret()) {
 						return Mono.error(new VoteException(VoteExceptionCode.ONGOING_SECRET_VOTE));
@@ -85,7 +86,7 @@ public class VoteServiceImpl implements VoteService {
 						return Flux.interval(Duration.ofSeconds(2))
 								.flatMap(time ->
 										voteRepository
-												.findVoteCountOfSelectOptionId(agendaId, selectOptionId)
+												.findVoteCountOfSelectOptionId(selectOptionId)
 												.switchIfEmpty(Mono.just(0)));
 					}
 				});
@@ -100,12 +101,12 @@ public class VoteServiceImpl implements VoteService {
 					if (agendaVo.secret()) {
 						return Mono.error(new VoteException(VoteExceptionCode.SECRET_VOTE));
 					} else if (LocalDate.now().isAfter(agendaVo.endDate())) {
-						return voteRepository.findUserIdsByAgendaIdAndId(agendaId, selectOptionId)
-								.collectList();
+						return voteRepository.findUserIdsBySelectOptionId(selectOptionId)
+								.collectList().switchIfEmpty(Mono.just(Collections.emptyList()));
 					} else {
 						return Flux.interval(Duration.ofSeconds(2)).flatMap(
-									time -> voteRepository.findUserIdsByAgendaIdAndId(agendaId, selectOptionId)
-											.collectList());
+									time -> voteRepository.findUserIdsBySelectOptionId(selectOptionId)
+											.collectList().switchIfEmpty(Mono.just(Collections.emptyList())));
 					}
 				});
 	}

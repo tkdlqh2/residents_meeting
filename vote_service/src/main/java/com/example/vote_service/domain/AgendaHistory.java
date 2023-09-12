@@ -2,8 +2,10 @@ package com.example.vote_service.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.annotation.Id;
@@ -15,6 +17,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "AGENDA_HISTORY")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AgendaHistory extends BaseEntity {
 
 	@Id
@@ -36,15 +39,13 @@ public class AgendaHistory extends BaseEntity {
 	List<SelectOptionHistory> selectOptions;
 
 	@Builder
-	public AgendaHistory(Long id, String apartmentCode, String title, String details, LocalDate endDate, List<SelectOptionHistory> selectOptions) {
+	protected AgendaHistory(Long id, String apartmentCode, String title, String details, LocalDate endDate, List<SelectOptionHistory> selectOptions) {
+		super();
 		this.id = id;
 		this.apartmentCode = apartmentCode;
 		this.title = title;
 		this.details = details;
 		this.endDate = endDate;
 		this.selectOptions = selectOptions;
-	}
-
-	protected AgendaHistory() {
 	}
 }

@@ -21,12 +21,12 @@ public class VoteCustomRepositoryImpl implements VoteCustomRepository {
 	public Mono<VoteHistory> findVoteHistoryByUserIdAndAgendaId(Long userId, Long agendaId) {
 
 		String sql = """ 
-			SELECT s.id as id, v.created_time as createdTime
+			SELECT s.id as id, v.created_at as createdTime
 			FROM Vote as v
 				INNER JOIN select_option s ON v.select_option_id = s.id
 			WHERE s.agenda_id = :agendaId
 				AND v.user_id = :userId
-			ORDER BY v.created_time DESC
+			ORDER BY v.created_at DESC
 			LIMIT 1
 			     """;
 
@@ -39,48 +39,49 @@ public class VoteCustomRepositoryImpl implements VoteCustomRepository {
 	}
 
 	@Override
-	public Mono<Integer> findVoteCountOfSelectOptionId(Long agendaId, Long selectOptionId) {
+	public Mono<Integer> findVoteCountOfSelectOptionId(Long selectOptionId) {
 
 		String sql = """
 			SELECT count(v.user_id) as voteCount
 			FROM Vote as v
-			WHERE (v.user_id, v.created_time) IN (
-				SELECT v2.user_id, MAX(v2.created_time)
+			WHERE (v.user_id, v.created_at) IN (
+				SELECT v2.user_id, MAX(v2.created_at)
 				FROM Vote v2
 				WHERE v2.select_option_id IN (
-					SELECT s.id FROM select_option s WHERE s.agenda_id = :agendaId
+					SELECT s.id FROM select_option s 
+					WHERE s.agenda_id = (SELECT s2.agenda_id from select_option s2 
+										WHERE s2.id = :selectOptionId ) 
 				)
 				GROUP BY v2.user_id
-			)
+			) and v.select_option_id = :selectOptionId
 			GROUP BY v.select_option_id
-			HAVING v.select_option_id = :selectOptionId
 			""";
 
 		return databaseClient.sql(sql)
-				.bind("agendaId",agendaId)
 				.bind("selectOptionId",selectOptionId)
 				.map(row -> row.get("voteCount", Integer.class))
 				.one();
 	}
 
 	@Override
-	public Flux<Long> findUserIdsByAgendaIdAndId(Long agendaId, Long selectOptionId) {
+	public Flux<Long> findUserIdsBySelectOptionId(Long selectOptionId) {
 
 		String sql = """
 			SELECT v.user_id as userId
 			FROM Vote as v
-			WHERE (v.user_id, v.created_time) IN (
-				SELECT v2.user_id, MAX(v2.created_time)
+			WHERE (v.user_id, v.created_at) IN (
+				SELECT v2.user_id, MAX(v2.created_at)
 				FROM Vote v2
 				WHERE v2.select_option_id IN (
-					SELECT s.id FROM select_option s WHERE s.agenda_id = :agendaId
+					SELECT s.id FROM select_option s 
+					WHERE s.agenda_id = (SELECT s2.agenda_id from select_option as s2 
+										WHERE s2.id = :selectOptionId) 
 				)
 				GROUP BY v2.user_id
 			)
 			AND v.select_option_id = :selectOptionId
 			 """;
 		return databaseClient.sql(sql)
-				.bind("agendaId",agendaId)
 				.bind("selectOptionId",selectOptionId)
 				.map(row -> row.get("userId", Long.class))
 				.all();
