@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -23,16 +23,20 @@ public class AgendaHistory extends BaseEntity {
 	@Column
 	@Lob
 	private String details;
+	@Column
+	private Boolean secret;
 	@Temporal(TemporalType.DATE)
 	@Column(name = "end_date")
 	private LocalDate endDate;
 
 	@Builder
-	private AgendaHistory(Long id, String apartmentCode, String title, String details, LocalDate endDate) {
+	private AgendaHistory(Long id, String apartmentCode, String title, String details, Boolean secret, LocalDate endDate, LocalDateTime createdAt) {
+		super(createdAt);
 		this.id = id;
 		this.apartmentCode = apartmentCode;
 		this.title = title;
 		this.details = details;
+		this.secret = secret;
 		this.endDate = endDate;
 	}
 
@@ -44,6 +48,8 @@ public class AgendaHistory extends BaseEntity {
 				.title(a.getTitle())
 				.details(a.getDetails())
 				.endDate(a.getEndDate())
+				.secret(a.isSecret())
+				.createdAt(a.getCreatedAt())
 				.build();
 	}
 

@@ -6,11 +6,12 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Entity
-public class SelectOptionHistory {
+public class SelectOptionHistory extends BaseEntity {
 	@Id
 	@JsonIgnore
 	private Long id;
@@ -28,12 +29,20 @@ public class SelectOptionHistory {
 	}
 
 	@Builder
-	private SelectOptionHistory(Long id, Long agendaId, String summary, String details, Integer count, List<Long> voterIds) {
+	private SelectOptionHistory(Long id,
+								Long agendaId,
+								String summary,
+								String details,
+								Integer count,
+								List<Long> voterIds,
+								LocalDateTime createdAt) {
+		super(createdAt);
 		this.id = id;
 		this.agendaId = agendaId;
 		this.summary = summary;
 		this.details = details;
 		this.count = count;
+		this.voterIds = voterIds;
 	}
 
 	public static SelectOptionHistory from(SelectOption s, Integer count, List<Long> voterIds){
@@ -44,6 +53,7 @@ public class SelectOptionHistory {
 				.details(s.getDetails())
 				.count(count)
 				.voterIds(voterIds)
+				.createdAt(s.getCreatedAt())
 				.build();
 	}
 }

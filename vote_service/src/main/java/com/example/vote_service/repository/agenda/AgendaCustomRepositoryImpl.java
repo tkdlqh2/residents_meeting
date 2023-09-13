@@ -36,7 +36,7 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 						.title((String) result.get("agendaTitle"))
 						.details((String) result.get("agendaDetails"))
 						.endDate((LocalDate) result.get("agendaEndDate"))
-						.secret(result.get("agendaSecret") == null || (Byte)result.get("agendaSecret") == 1)
+						.secret(result.get("agendaSecret") == null || (result.get("agendaSecret")).equals(1))
 						.createdAt(result.get("agendaCreatedAt") == null ?
 								null : ((ZonedDateTime) result.get("agendaCreatedAt")).toLocalDateTime())
 						.build());
@@ -65,7 +65,6 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 					var selectOptions = result.stream()
 							.map(row -> new SelectOptionVo(
 									(Long) row.get("selectOptionId"),
-									id,
 									(String) row.get("selectOptionSummary"),
 									(String) row.get("selectOptionDetails")))
 							.toList();
@@ -77,7 +76,7 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 							.title((String) row.get("agendaTitle"))
 							.details((String) row.get("agendaDetails"))
 							.endDate((LocalDate) row.get("agendaEndDate"))
-							.secret(row.get("agendaSecret") == null || (Byte)row.get("agendaSecret") == 1)
+							.secret(row.get("agendaSecret") == null || (row.get("agendaSecret")).equals(1))
 							.createdAt(row.get("agendaCreatedTime") == null ?
 									null : ((ZonedDateTime) row.get("agendaCreatedTime")).toLocalDateTime())
 							.selectOptionList(selectOptions)
@@ -104,7 +103,7 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 						.title((String) result.get("title"))
 						.details((String) result.get("details"))
 						.endDate((LocalDate) result.get("end_date"))
-						.secret(result.get("secret") == null || (Byte)result.get("secret") == 1)
+						.secret(result.get("secret") == null || result.get("secret").equals(1))
 						.createdAt(result.get("created_time") == null ?
 								null : ((ZonedDateTime) result.get("created_time")).toLocalDateTime())
 						.build());

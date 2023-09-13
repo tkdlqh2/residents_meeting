@@ -6,13 +6,11 @@ import lombok.Builder;
 @Builder
 public record SelectOptionVo(
 		Long id,
-		Long agendaId,
 		String summary,
 		String details){
 	public SelectOptionHistory toSelectOptionHistory() {
 
 		return SelectOptionHistory.builder()
-				.agendaId(agendaId)
 				.summary(summary)
 				.details(details)
 				.build();

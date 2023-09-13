@@ -30,7 +30,7 @@ public class BatchScheduler {
 	@Scheduled(cron = "${batch.schedule.cron}")
 	public void runJob() {
 
-		LocalDate targetDate = LocalDate.of(2023, 10,5);
+		LocalDate targetDate = LocalDate.now().minusDays(1);
 
 		JobParameters jobParameters = new JobParametersBuilder()
 				.addLocalDate("today", targetDate)

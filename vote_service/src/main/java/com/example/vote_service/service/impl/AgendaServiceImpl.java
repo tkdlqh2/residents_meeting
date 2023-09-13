@@ -10,7 +10,7 @@ import com.example.vote_service.exception.VoteExceptionCode;
 import com.example.vote_service.messagequeue.KafkaProducer;
 import com.example.vote_service.messagequeue.MessageProduceResult;
 import com.example.vote_service.repository.agenda.AgendaCustomRepository;
-import com.example.vote_service.repository.agenda.AgendaHistoryRepository;
+import com.example.vote_service.repository.agenda.AgendaHistoryCustomRepository;
 import com.example.vote_service.service.AgendaService;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -20,14 +20,14 @@ public class AgendaServiceImpl implements AgendaService {
 
 	private final KafkaProducer kafkaProducer;
 	private final AgendaCustomRepository agendaCustomRepository;
-	private final AgendaHistoryRepository agendaHistoryRepository;
+	private final AgendaHistoryCustomRepository agendaHistoryCustomRepository;
 
 	public AgendaServiceImpl(KafkaProducer kafkaProducer,
 							 AgendaCustomRepository agendaCustomRepository,
-							 AgendaHistoryRepository agendaHistoryRepository) {
+							 AgendaHistoryCustomRepository agendaHistoryCustomRepository) {
 		this.kafkaProducer = kafkaProducer;
 		this.agendaCustomRepository = agendaCustomRepository;
-		this.agendaHistoryRepository = agendaHistoryRepository;
+		this.agendaHistoryCustomRepository = agendaHistoryCustomRepository;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class AgendaServiceImpl implements AgendaService {
 
 	@Override
 	public Mono<AgendaHistory> getAgendaHistory(Long agendaId) {
-		return agendaHistoryRepository.findById(agendaId)
+		return agendaHistoryCustomRepository.findById(agendaId)
 				.switchIfEmpty(Mono.defer(() -> getAgendaHistoryMonoFromRepo(agendaId)))
 				.transformDeferredContextual((mono, contextView) -> mono.zipWith(Mono.just(contextView.get("user"))))
 				.flatMap(tuple -> {

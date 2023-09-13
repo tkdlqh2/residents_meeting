@@ -63,8 +63,8 @@ class VoteServiceImplTest {
 						LocalDate.now().plusDays(3),
 						true,
 						null,
-						List.of(new SelectOptionVo(1L,agendaId , "찬성","찬성입니다."),
-								new SelectOptionVo(2L,agendaId , "반대","반대입니다.")))
+						List.of(new SelectOptionVo(1L,"찬성","찬성입니다."),
+								new SelectOptionVo(2L,"반대","반대입니다.")))
 						));
 
 		given(kafkaProducer.send(any()))
@@ -103,8 +103,8 @@ class VoteServiceImplTest {
 						LocalDate.now().plusDays(3),
 						true,
 						null,
-						List.of(new SelectOptionVo(1L,agendaId , "찬성","찬성입니다."),
-								new SelectOptionVo(2L,agendaId , "반대","반대입니다.")))
+						List.of(new SelectOptionVo(1L, "찬성","찬성입니다."),
+								new SelectOptionVo(2L, "반대","반대입니다.")))
 				));
 
 
@@ -177,8 +177,8 @@ class VoteServiceImplTest {
 						LocalDate.now().plusDays(3),
 						true,
 						null,
-						List.of(new SelectOptionVo(1L,agendaId , "찬성","찬성입니다."),
-								new SelectOptionVo(2L,agendaId , "반대","반대입니다.")))
+						List.of(new SelectOptionVo(1L, "찬성","찬성입니다."),
+								new SelectOptionVo(2L, "반대","반대입니다.")))
 				));
 
 		VoteCreationDto voteCreationDto = new VoteCreationDto(selectOptionId);
@@ -217,8 +217,8 @@ class VoteServiceImplTest {
 						LocalDate.now().minusDays(1),
 						true,
 						null,
-						List.of(new SelectOptionVo(1L,agendaId , "찬성","찬성입니다."),
-								new SelectOptionVo(2L,agendaId , "반대","반대입니다.")))
+						List.of(new SelectOptionVo(1L, "찬성","찬성입니다."),
+								new SelectOptionVo(2L, "반대","반대입니다.")))
 				));
 
 		VoteCreationDto voteCreationDto = new VoteCreationDto(selectOptionId);
@@ -478,7 +478,7 @@ class VoteServiceImplTest {
 						null,
 						Collections.emptyList())));
 
-		given(voteRepository.findUserIdsBySelectOptionId(selectOptionId))
+		given(selectOptionHistoryRepository.findVoterIdsById(selectOptionId))
 				.willReturn(Flux.fromIterable(List.of(1L,3L,5L)));
 
 		UserInfo userInfo =  new UserInfo(userId,

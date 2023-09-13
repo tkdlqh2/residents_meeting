@@ -9,7 +9,7 @@ import com.example.vote_service.exception.VoteExceptionCode;
 import com.example.vote_service.messagequeue.KafkaProducer;
 import com.example.vote_service.messagequeue.MessageProduceResult;
 import com.example.vote_service.repository.agenda.AgendaCustomRepository;
-import com.example.vote_service.repository.agenda.AgendaHistoryRepository;
+import com.example.vote_service.repository.agenda.AgendaHistoryCustomRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ class AgendaServiceImplTest {
 	@Mock
 	private AgendaCustomRepository agendaCustomRepository;
 	@Mock
-	private AgendaHistoryRepository agendaHistoryRepository;
+	private AgendaHistoryCustomRepository agendaHistoryRepository;
 	@InjectMocks
 	private AgendaServiceImpl agendaService;
 
@@ -115,8 +115,8 @@ class AgendaServiceImplTest {
 				.endDate(LocalDate.now().minusDays(3))
 				.selectOptions(
 						List.of(
-								new SelectOptionHistory(agendaId,"찬성", "찬성입니다.", 1),
-								new SelectOptionHistory(agendaId,"반대", "반대입니다.", 2)
+								new SelectOptionHistory("찬성", "찬성입니다.", 1),
+								new SelectOptionHistory("반대", "반대입니다.", 2)
 						)
 				)
 				.build();
@@ -157,8 +157,8 @@ class AgendaServiceImplTest {
 								.secret(false)
 								.selectOptionList(
 										List.of(
-												new SelectOptionVo(1L,agendaId,"찬성", "찬성입니다." ),
-												new SelectOptionVo(2L,agendaId,"반대", "반대입니다.")
+												new SelectOptionVo(1L,"찬성", "찬성입니다." ),
+												new SelectOptionVo(2L,"반대", "반대입니다.")
 										)
 								)
 						.build()));
@@ -233,8 +233,8 @@ class AgendaServiceImplTest {
 				.endDate(LocalDate.now().minusDays(3))
 				.selectOptions(
 						List.of(
-								new SelectOptionHistory(agendaId,"찬성", "찬성입니다.", 1),
-								new SelectOptionHistory(agendaId,"반대", "반대입니다.", 2)
+								new SelectOptionHistory("찬성", "찬성입니다.", 1),
+								new SelectOptionHistory("반대", "반대입니다.", 2)
 						)
 				)
 				.build();

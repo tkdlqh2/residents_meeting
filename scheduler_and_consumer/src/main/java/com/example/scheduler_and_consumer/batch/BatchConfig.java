@@ -87,7 +87,7 @@ public class BatchConfig {
 				.name("agendaHistoryTargetReader")
 				.queryString("""
 				SELECT a FROM Agenda a
-   				WHERE a.endDate = :targetDate -1
+   				WHERE a.endDate = :targetDate
 				""")
 				.parameterValues(parameters)
 				.pageSize(10)
@@ -121,7 +121,7 @@ public class BatchConfig {
 				.queryString("""
 				SELECT s FROM SelectOption s
 				JOIN Agenda a ON s.agenda.id = a.id
-   				WHERE a.endDate = :targetDate -1
+   				WHERE a.endDate = :targetDate
 				""")
 				.pageSize(10)
 				.parameterValues(parameters)
