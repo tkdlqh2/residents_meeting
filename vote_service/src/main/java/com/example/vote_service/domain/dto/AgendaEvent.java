@@ -12,29 +12,29 @@ public class AgendaEvent extends Event {
 		super("agenda_sink", agendaPayload);
 	}
 
-	public static AgendaEvent from(AgendaCreationDTO creationDTO) {
-		return new AgendaEvent(new AgendaPayload(creationDTO));
+	public static AgendaEvent from(AgendaCreationDTO creationDTO, String apartmentCode) {
+		return new AgendaEvent(new AgendaPayload(creationDTO, apartmentCode));
 	}
 
 	private record AgendaPayload(
-			Long Id,
+			Long id,
 			String apartmentCode,
 			String title,
 			String details,
 			LocalDate endDate,
+			Boolean secret,
 			LocalDateTime createdAt,
-			LocalDateTime updatedAt,
 			List<SelectOptionPayload> selectOptionPayloadList
 
 	) {
-		public AgendaPayload(AgendaCreationDTO creationDTO) {
+		public AgendaPayload(AgendaCreationDTO creationDTO, String apartmentCode) {
 			this(null,
-					creationDTO.apartmentCode(),
+					apartmentCode,
 					creationDTO.title(),
 					creationDTO.details(),
 					creationDTO.endDate(),
+					creationDTO.secret(),
 					LocalDateTime.now(),
-					null,
 					creationDTO.selectOptionCreationDtoList().stream()
 							.map(SelectOptionPayload::new).toList());
 		}
@@ -44,10 +44,11 @@ public class AgendaEvent extends Event {
 	private record SelectOptionPayload(
 			Long id,
 			String summary,
-			String details
+			String details,
+			LocalDateTime createdAt
 	){
 		public SelectOptionPayload(SelectOptionCreationDto creationDto) {
-			this(null, creationDto.summary(), creationDto.details());
+			this(null, creationDto.summary(), creationDto.details(), LocalDateTime.now());
 		}
 	}
 }

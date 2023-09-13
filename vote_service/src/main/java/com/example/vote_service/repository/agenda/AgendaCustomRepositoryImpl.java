@@ -19,14 +19,38 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 	}
 
 	@Override
+	public Mono<AgendaVo> findById(Long id) {
+
+		String sql = """
+				SELECT a.id AS agendaId, a.apartment_code AS apartmentCode, a.title AS agendaTitle, 
+    			a.details AS agendaDetails, a.end_date AS agendaEndDate, a.secret as agendaSecret, a.created_at AS agendaCreatedAt
+				FROM Agenda a 
+				WHERE a.id = :id
+				""";
+
+		return databaseClient.sql(sql)
+				.bind("id", id)
+				.fetch().first().map( result -> AgendaVo.builder()
+						.id((Long) result.get("agendaId"))
+						.apartmentCode((String) result.get("apartmentCode"))
+						.title((String) result.get("agendaTitle"))
+						.details((String) result.get("agendaDetails"))
+						.endDate((LocalDate) result.get("agendaEndDate"))
+						.secret(result.get("agendaSecret") == null || (result.get("agendaSecret")).equals(1))
+						.createdAt(result.get("agendaCreatedAt") == null ?
+								null : ((ZonedDateTime) result.get("agendaCreatedAt")).toLocalDateTime())
+						.build());
+	}
+
+	@Override
 	public Mono<AgendaVo> findByIdUsingFetchJoin(Long id) {
 
 		String sqlWithSelectOption =
     		"""
     			SELECT a.id AS agendaId, a.apartment_code AS apartmentCode, a.title AS agendaTitle, 
-    			a.details AS agendaDetails, a.end_date AS agendaEndDate, a.created_time AS agendaCreatedTime,
-    			a.updated_time AS agendaUpdatedTime, s.id AS selectOptionId, s.summary AS selectOptionSummary,
-    			s.details AS selectOptionDetails, s.created_time AS selectOptionCreatedTime, s.updated_time As selectOptionUpdatedTime
+    			a.details AS agendaDetails, a.end_date AS agendaEndDate, a.secret as agendaSecret, a.created_at AS agendaCreatedTime,
+    			s.id AS selectOptionId, s.summary AS selectOptionSummary,
+    			s.details AS selectOptionDetails
 				FROM Agenda a 
 				JOIN select_option s
 				ON a.id = s.agenda_id
@@ -41,13 +65,8 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 					var selectOptions = result.stream()
 							.map(row -> new SelectOptionVo(
 									(Long) row.get("selectOptionId"),
-									null,
 									(String) row.get("selectOptionSummary"),
-									(String) row.get("selectOptionDetails"),
-									row.get("selectOptionCreatedTime") == null ?
-											null : ((ZonedDateTime)row.get("selectOptionCreatedTime")).toLocalDateTime(),
-									row.get("selectOptionUpdatedTime") == null ?
-											null : ((ZonedDateTime)row.get("selectOptionUpdatedTime")).toLocalDateTime()))
+									(String) row.get("selectOptionDetails")))
 							.toList();
 					var row = result.get(0);
 
@@ -57,40 +76,38 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 							.title((String) row.get("agendaTitle"))
 							.details((String) row.get("agendaDetails"))
 							.endDate((LocalDate) row.get("agendaEndDate"))
+							.secret(row.get("agendaSecret") == null || (row.get("agendaSecret")).equals(1))
 							.createdAt(row.get("agendaCreatedTime") == null ?
 									null : ((ZonedDateTime) row.get("agendaCreatedTime")).toLocalDateTime())
-							.updatedAt(row.get("agendaUpdatedTime") == null ?
-									null : ((ZonedDateTime) row.get("agendaUpdatedTime")).toLocalDateTime())
 							.selectOptionList(selectOptions)
 							.build();
 				});
 	}
 
 	@Override
-	public Mono<LocalDate> findEndDateById(Long agendaId) {
+	public Mono<AgendaVo> findBySelectOptionId(Long selectOptionId) {
 		String sql = """
-				SELECT a.end_date
+				SELECT a.id, a.apartment_code, a.title, a.details, a.end_date,a.secret, a.created_at
 				FROM agenda a
-				WHERE id = :agendaId
+				JOIN select_option s
+				ON a.id = s.agenda_id
+				WHERE s.id = :selectOptionId
 				""";
-
 		return databaseClient.sql(sql)
-				.bind("agendaId", agendaId)
+				.bind("selectOptionId", selectOptionId)
 				.fetch().first()
-				.map(result -> (LocalDate) result.get("end_date"));
+				.map(result ->
+						AgendaVo.builder()
+						.id((Long) result.get("id"))
+						.apartmentCode((String) result.get("apartment_code"))
+						.title((String) result.get("title"))
+						.details((String) result.get("details"))
+						.endDate((LocalDate) result.get("end_date"))
+						.secret(result.get("secret") == null || result.get("secret").equals(1))
+						.createdAt(result.get("created_time") == null ?
+								null : ((ZonedDateTime) result.get("created_time")).toLocalDateTime())
+						.build());
 	}
 
-	@Override
-	public Mono<String> findApartmentCodeById(Long agendaId) {
-		String sql = """
-				SELECT a.apartment_code
-				FROM agenda a
-				WHERE id = :agendaId
-				""";
 
-		return databaseClient.sql(sql)
-				.bind("agendaId", agendaId)
-				.fetch().first()
-				.map(result -> (String) result.get("apartment_code"));
-	}
 }

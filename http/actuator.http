@@ -1,0 +1,10 @@
+
+### 1. user-service refresh
+POST {{user-url}}/actuator/refresh
+
+### 2. gateway refresh
+POST {{gateway-url}}/actuator/refresh
+
+### 3. vote-service refresh
+POST {{vote-url}}/actuator/refresh
+

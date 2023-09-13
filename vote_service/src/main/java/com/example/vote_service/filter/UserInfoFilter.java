@@ -1,6 +1,7 @@
 package com.example.vote_service.filter;
 
 import com.example.vote_service.UserInfo;
+import com.example.vote_service.domain.AuthTokenHolder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,16 +16,23 @@ import reactor.core.publisher.Mono;
 public class UserInfoFilter implements WebFilter {
 
 	private final RestTemplate restTemplate;
-	public UserInfoFilter(RestTemplate restTemplate) {
+	private final AuthTokenHolder authTokenHolder;
+	public UserInfoFilter(RestTemplate restTemplate, AuthTokenHolder authTokenHolder) {
 		this.restTemplate = restTemplate;
+		this.authTokenHolder = authTokenHolder;
 	}
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", exchange.getRequest().getHeaders().getFirst("Authorization"));
-
+		String uri = exchange.getRequest().getURI().toString();
+		if(!uri.contains("/api/vote") && !uri.contains("/api/agenda")) {
+			return chain.filter(exchange);
+		}
+		String token = exchange.getRequest().getHeaders().getFirst("Authorization");
+		headers.set("Authorization", token);
+		authTokenHolder.setToken(token);
 		UserInfo userInfo = restTemplate.exchange("http://localhost:8000/api/user/",
 				HttpMethod.GET,
 				new HttpEntity<>(headers),

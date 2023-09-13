@@ -1,14 +1,14 @@
 
 ### 1. 안건 생성
-POST {{root-url}}/api/agenda/
+POST {{gateway-url}}/api/agenda/
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5MzIwNTQzMiwiZXhwIjoxNjkzMjkxODMyfQ.TRH9ob53Tj1I6AWYf4wDXh9pumgZ2yU4VE1tTNrqMZzuAL1jNQj13mrlZc0eTA5QyeMTH4cg2QCT-qxsRaY3Og
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDM1MDY4LCJleHAiOjE2OTQ1MjE0Njh9.sPj_B33wAXrEbtwYql-PbjwbMXDe_GY2ZQPyEgwp_ndAh-IKmqZL8aG37a4imsDIZ98VsRUrbyVEqqRutr3xqQ
 
 {
-  "apartmentCode": "A12345678",
   "title": "제목",
   "details": "설명",
-  "endDate": "2023-08-30",
+  "endDate": "2023-10-02",
+  "secret": false,
   "selectOptionCreationDtoList": [
     {
       "summary": "찬성",
@@ -22,12 +22,6 @@ Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsi
 }
 
 ### 2. 안건 조회
-GET {{root-url}}/api/agenda/1
+GET {{gateway-url}}/api/agenda/1
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5MzIwNTQzMiwiZXhwIjoxNjkzMjkxODMyfQ.TRH9ob53Tj1I6AWYf4wDXh9pumgZ2yU4VE1tTNrqMZzuAL1jNQj13mrlZc0eTA5QyeMTH4cg2QCT-qxsRaY3Og
-
-### 3. 선택지 조회
-GET {{root-url}}/api/agenda/1/select-option/2
-Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5Mjk4NjAzNCwiZXhwIjoxNjkzMDcyNDM0fQ.yto7baAl5NmntTbIsJfRWWON4s7NQi1-1W23KN70j3VGS2hpnSPVJXBQTTF6MGV-yjM2dYUB1dnOkrxem6JUGw
-
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDM1MDY4LCJleHAiOjE2OTQ1MjE0Njh9.sPj_B33wAXrEbtwYql-PbjwbMXDe_GY2ZQPyEgwp_ndAh-IKmqZL8aG37a4imsDIZ98VsRUrbyVEqqRutr3xqQ

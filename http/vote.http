@@ -1,14 +1,24 @@
 ### 1. 투표
-POST {{root-url}}/api/vote/
+POST {{gateway-url}}/api/vote/
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5MzIwNTQzMiwiZXhwIjoxNjkzMjkxODMyfQ.TRH9ob53Tj1I6AWYf4wDXh9pumgZ2yU4VE1tTNrqMZzuAL1jNQj13mrlZc0eTA5QyeMTH4cg2QCT-qxsRaY3Og
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDM1MDY4LCJleHAiOjE2OTQ1MjE0Njh9.sPj_B33wAXrEbtwYql-PbjwbMXDe_GY2ZQPyEgwp_ndAh-IKmqZL8aG37a4imsDIZ98VsRUrbyVEqqRutr3xqQ
 
 {
-  "agendaId": 1,
-  "selectOptionId": 1
+  "selectOptionId": 2
 }
 
 ### 2. 가장 최근 투표 결과 조회
-GET {{root-url}}/api/vote/1
+GET {{gateway-url}}/api/vote/agenda/1
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5Mjk4NjAzNCwiZXhwIjoxNjkzMDcyNDM0fQ.yto7baAl5NmntTbIsJfRWWON4s7NQi1-1W23KN70j3VGS2hpnSPVJXBQTTF6MGV-yjM2dYUB1dnOkrxem6JUGw
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDM1MDY4LCJleHAiOjE2OTQ1MjE0Njh9.sPj_B33wAXrEbtwYql-PbjwbMXDe_GY2ZQPyEgwp_ndAh-IKmqZL8aG37a4imsDIZ98VsRUrbyVEqqRutr3xqQ
+
+
+### 3. 선택지 투표수 조회
+GET {{gateway-url}}/api/vote/agenda/1/select-option/2/count
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDM1MDY4LCJleHAiOjE2OTQ1MjE0Njh9.sPj_B33wAXrEbtwYql-PbjwbMXDe_GY2ZQPyEgwp_ndAh-IKmqZL8aG37a4imsDIZ98VsRUrbyVEqqRutr3xqQ
+
+### 4. 선택지 정보 조회
+GET {{gateway-url}}/api/vote/agenda/1/select-option/2/info
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDM1MDY4LCJleHAiOjE2OTQ1MjE0Njh9.sPj_B33wAXrEbtwYql-PbjwbMXDe_GY2ZQPyEgwp_ndAh-IKmqZL8aG37a4imsDIZ98VsRUrbyVEqqRutr3xqQ
