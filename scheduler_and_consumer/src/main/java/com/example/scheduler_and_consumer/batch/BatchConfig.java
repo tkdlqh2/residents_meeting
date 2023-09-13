@@ -26,6 +26,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -134,7 +135,8 @@ public class BatchConfig {
 		return selectOption -> {
 			Integer count = voteRepository.countLastById(selectOption.getId());
 			count = count == null ? 0 : count;
-			return SelectOptionHistory.from(selectOption, count);
+			List<Long> userIds = voteRepository.findUserIdBySelectOptionId(selectOption.getId());
+			return SelectOptionHistory.from(selectOption, count, userIds);
 		};
 	}
 

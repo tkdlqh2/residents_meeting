@@ -6,7 +6,7 @@ import com.example.vote_service.exception.VoteException;
 import com.example.vote_service.exception.VoteExceptionCode;
 import com.example.vote_service.messagequeue.KafkaProducer;
 import com.example.vote_service.messagequeue.MessageProduceResult;
-import com.example.vote_service.repository.SelectOptionHistoryRepository;
+import com.example.vote_service.repository.agenda.SelectOptionHistoryRepository;
 import com.example.vote_service.repository.agenda.AgendaCustomRepository;
 import com.example.vote_service.repository.vote.VoteCustomRepository;
 import org.junit.jupiter.api.DisplayName;

@@ -9,7 +9,7 @@ import com.example.vote_service.exception.VoteException;
 import com.example.vote_service.exception.VoteExceptionCode;
 import com.example.vote_service.messagequeue.KafkaProducer;
 import com.example.vote_service.messagequeue.MessageProduceResult;
-import com.example.vote_service.repository.SelectOptionHistoryRepository;
+import com.example.vote_service.repository.agenda.SelectOptionHistoryRepository;
 import com.example.vote_service.repository.agenda.AgendaCustomRepository;
 import com.example.vote_service.repository.vote.VoteCustomRepository;
 import com.example.vote_service.service.VoteService;
@@ -101,7 +101,7 @@ public class VoteServiceImpl implements VoteService {
 					if (agendaVo.secret()) {
 						return Mono.error(new VoteException(VoteExceptionCode.SECRET_VOTE));
 					} else if (LocalDate.now().isAfter(agendaVo.endDate())) {
-						return voteRepository.findUserIdsBySelectOptionId(selectOptionId)
+						return selectOptionHistoryRepository.findVoterIdsById(selectOptionId)
 								.collectList().switchIfEmpty(Mono.just(Collections.emptyList()));
 					} else {
 						return Flux.interval(Duration.ofSeconds(2)).flatMap(
