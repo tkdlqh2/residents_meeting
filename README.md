@@ -137,69 +137,131 @@ sequenceDiagram
     B --) A: 요청 결과 전달
 ```
 
-1. 유저 등록
-```mermaid
-sequenceDiagram
-    participant B as API Gateway
-    participant C as User Server
-    participant D as User Database
-    B ->> C : 등록 요청
-    C ->>+ D: Email 중복 체크
-    D -->>- C: Email 중복 여부 반환
-    alt email 중복
-        C -->> B: 404 error 반환
-    end
-    C ->>+ D:  핸드폰 번호 중복 체크
-    D -->>- C: 핸드폰 중복 여부 반환
-    alt 핸드폰 번호 중복
-    C -->> B: 404 error 반환
-    end
-    C ->> D: 유저 등록
-    C -->> B: UserDto 반환
+1. 유저 CR
+   1. 유저 등록
+      ```mermaid
+      sequenceDiagram
+          participant B as API Gateway
+          participant C as User Server
+          participant D as User Database
+          B ->> C : 등록 요청
+          C ->>+ D: Email 중복 체크
+          D -->>- C: Email 중복 여부 반환
+          alt email 중복
+              C -->> B: 404 error 반환
+          end
+          C ->>+ D:  핸드폰 번호 중복 체크
+          D -->>- C: 핸드폰 중복 여부 반환
+          alt 핸드폰 번호 중복
+          C -->> B: 404 error 반환
+          end
+          C ->> D: 유저 등록
+      
+          C ->>+ D: 해당 주소의 houseLeader 토큰 존재 여부 조회
+          D -->>- C: houseLeader 토큰 존재 여부 반환
+          alt houseLeader 토큰 존재
+              C ->>+ D : 존재하는 토큰 반환 요청
+              D -->>- C: 존재하는 토큰 반환 
+          else houseLeader 토큰 존재 안함
+              C ->> C: 새롭게 토큰 생성
+              C ->> D : 새롭게 생성한 토큰 저장
+          end 
+          C -->> B: HOUSE_LEADER token 반환 
     
+      ```
+   2. 유저 로그인
+      ```mermaid
+      sequenceDiagram
+          participant B as API Gateway
+          participant C as User Server
+          participant D as User Database
+          B ->> C : 로그인 요청 
+          C ->> D: Email 로 유저 정보 조회 요청
+          alt email 존재하지 않음
+              C ->> B : 404 error 반환
+          else email 존재함
+              D -->> C: 유저 정보 조회 결과 반환
+          end
+          C ->> C : 비밀번호 일치 여부 확인
+          alt 비밀번호 일치함
+          C -->> B: 토큰 반환
+          else 비밀번호 일치하지 않음
+          C -->> B: 404 error 반환
+          end
+        
+        
+        
+      ```
+    
+   3. 유저 정보 조회
+      ```mermaid
+      sequenceDiagram
+          participant B as API Gateway
+          participant C as User Server
+          C ->> B: requestContextHolder 에 저장되어 있는 유저 정보 반환 
+      ```
+    
+   4. 유저 이메일 가져오기 (vote service 에서 사용)
+      ```mermaid
+      sequenceDiagram
+          participant C as User Server
+          participant D as User Database
+          C ->>+ D: findAllById(ids) 로 유저 정보 list 조회
+          D -->>- C: 유저 정보 list 반환
+          C ->> C : 유저 정보 list 에서 email 만 추출하여 반환
+      ```
 
-```
-2. 유저 로그인
-```mermaid
-sequenceDiagram
-    participant B as API Gateway
-    participant C as User Server
-    participant D as User Database
-    B ->> C : 로그인 요청 
-    C ->> D: Email 로 유저 정보 조회 요청
-    alt email 존재하지 않음
-        C ->> B : 404 error 반환
-    else email 존재함
-        D -->> C: 유저 정보 조회 결과 반환
-    end
-    C ->> C : 비밀번호 일치 여부 확인
-    alt 비밀번호 일치함
-    C -->> B: 토큰 반환
-    else 비밀번호 일치하지 않음
-    C -->> B: 404 error 반환
-    end
-    
-    
-    
-```
-
-3. 유저 정보 조회
-```mermaid
-sequenceDiagram
-    participant B as API Gateway
-    participant C as User Server
-    C ->> B: requestContextHolder 에 저장되어 있는 유저 정보 반환 
-```
-
-4. 유저 이메일 가져오기 (vote service 에서 사용)
-```mermaid
-sequenceDiagram
-    participant C as User Server
-    participant D as User Database
-    C ->>+ D: findAllById(ids) 로 유저 정보 list 조회
-    D -->>- C: 유저 정보 list 반환
-    C ->> C : 유저 정보 list 에서 email 만 추출하여 반환
-```
+2. 유저 Role 관련
+   1. 아파트 LEADER || VICE_LEADER 코드 생성 (admin 만 가능)
+   
+   2. 유저 Role 변경 
+      ```mermaid
+      sequenceDiagram
+          participant B as API Gateway
+          participant C as User Server
+          participant D as User Database
+          
+          B ->> C : Role 변경 토큰 입력
+          C ->>+ D: 토큰 조회 요청
+          D -->>- C: 토큰 결과 반환
+          alt 토큰 존재하지 않음 || 토큰이 expired 됨
+              C -->> B : 404 error 반환
+          end
+      
+          C ->> C : requestContextHolder 에 저장되어 있는 유저 정보 조회
+          C ->> C : 유저 정보의 apartment code 와 토큰의 apartment code 비교
+          alt 불일치
+                  C -->> B : 404 error 반환
+          end
+          
+          alt 토큰 role 이 LEADER
+              C ->>+ D : 해당 apartment 의 leader 존재 여부 조회
+              D -->>- C : leader 존재 여부 반환
+              alt leader 존재
+                  C -->> B : 404 error 반환
+              end
+                  C ->> D: 토큰 만료 처리 && 유저 Role Leader 로 변경
+          else 토큰 role 이 VICE_LEADER
+              C ->>+ D : 해당 apartment 의 VICE_LEADER 숫자 조회
+              D -->>- C : VICE_LEADER 숫자 반환
+              alt viceLeader 숫자가 N명 이상(ex - 5)
+                  C -->> B : 404 error 반환
+              else viceLeader 숫자가 N - 1명
+                  C ->> D: 토큰 만료 처리 && 유저 Role VICE_LEADER 로 변경
+              else viceLeader 숫자가 N - 2명 이하
+                  C ->> D: 유저 Role VICE_LEADER 로 변경
+              end
+          else 토큰 role 이 HOUSE_LEADER
+              C ->>+ D : 해당 주소(apartment 동 호) 의 HOSE_LEADER 존재 여부 조회
+              D -->>- C : HOSE_LEADER 존재 여부 반환
+              alt house_leader 존재 안함
+                  C ->> D : 유저 Role HOSE_LEADER 로 변경
+              else house_leader 존재
+                  C ->> D : 유저 Role MEMBER 로 변경
+              end
+          end
+          C -->> B: 유저 role 변경 성공 반환
+      ```
 
 ### VOTE SERVICE API SEQ DIAGRAM
 0. VOTE SERVICE 의 요청 전달시 거치는 과정
