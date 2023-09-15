@@ -4,6 +4,8 @@ import com.example.vote_service.domain.AuthTokenHolder;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
@@ -14,7 +16,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class Config {
-
 	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
@@ -42,5 +43,10 @@ public class Config {
 		mapper.registerModule(new JavaTimeModule());
 		mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 		return mapper;
+	}
+
+	@Bean
+	public CacheManager cacheManager() {
+		return new CaffeineCacheManager();
 	}
 }

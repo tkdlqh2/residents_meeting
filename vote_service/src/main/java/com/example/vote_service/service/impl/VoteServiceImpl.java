@@ -13,6 +13,7 @@ import com.example.vote_service.repository.agenda.SelectOptionHistoryRepository;
 import com.example.vote_service.repository.agenda.AgendaCustomRepository;
 import com.example.vote_service.repository.vote.VoteCustomRepository;
 import com.example.vote_service.service.VoteService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -29,6 +30,9 @@ public class VoteServiceImpl implements VoteService {
 	private final VoteCustomRepository voteRepository;
 	private final SelectOptionHistoryRepository selectOptionHistoryRepository;
 	private final KafkaProducer kafkaProducer;
+
+	@Value("${event.delay}")
+	private Integer eventDelay;
 
 	public VoteServiceImpl(AgendaCustomRepository agendaCustomRepository,
 						   VoteCustomRepository voteRepository,
@@ -83,7 +87,7 @@ public class VoteServiceImpl implements VoteService {
 					} else if(agendaVo.secret()) {
 						return Mono.error(new VoteException(VoteExceptionCode.ONGOING_SECRET_VOTE));
 					} else {
-						return Flux.interval(Duration.ofSeconds(2))
+						return Flux.interval(Duration.ofSeconds(eventDelay))
 								.flatMap(time ->
 										voteRepository
 												.findVoteCountOfSelectOptionId(selectOptionId)
@@ -104,7 +108,7 @@ public class VoteServiceImpl implements VoteService {
 						return selectOptionHistoryRepository.findVoterIdsById(selectOptionId)
 								.collectList().switchIfEmpty(Mono.just(Collections.emptyList()));
 					} else {
-						return Flux.interval(Duration.ofSeconds(2)).flatMap(
+						return Flux.interval(Duration.ofSeconds(eventDelay)).flatMap(
 									time -> voteRepository.findUserIdsBySelectOptionId(selectOptionId)
 											.collectList().switchIfEmpty(Mono.just(Collections.emptyList())));
 					}
