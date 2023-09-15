@@ -1,6 +1,7 @@
 package com.example.vote_service.repository.vote;
 
 import com.example.vote_service.domain.dto.VoteHistory;
+import com.example.vote_service.filter.ReactorCacheable;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -39,6 +40,7 @@ public class VoteCustomRepositoryImpl implements VoteCustomRepository {
 	}
 
 	@Override
+	@ReactorCacheable(name = "voteCount")
 	public Mono<Integer> findVoteCountOfSelectOptionId(Long selectOptionId) {
 
 		String sql = """
@@ -60,10 +62,12 @@ public class VoteCustomRepositoryImpl implements VoteCustomRepository {
 		return databaseClient.sql(sql)
 				.bind("selectOptionId",selectOptionId)
 				.map(row -> row.get("voteCount", Integer.class))
-				.one();
+				.one()
+				.log();
 	}
 
 	@Override
+	@ReactorCacheable(name = "voteUserIds")
 	public Flux<Long> findUserIdsBySelectOptionId(Long selectOptionId) {
 
 		String sql = """
@@ -84,8 +88,7 @@ public class VoteCustomRepositoryImpl implements VoteCustomRepository {
 		return databaseClient.sql(sql)
 				.bind("selectOptionId",selectOptionId)
 				.map(row -> row.get("userId", Long.class))
-				.all();
+				.all()
+				.log();
 	}
-
-
 }
