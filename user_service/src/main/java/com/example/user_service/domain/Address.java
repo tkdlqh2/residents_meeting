@@ -1,5 +1,6 @@
 package com.example.user_service.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 
@@ -9,6 +10,7 @@ import java.io.Serializable;
 @Getter
 public class Address implements Serializable {
 
+	@Column(nullable = false)
 	private String apartmentCode;
 	private int building;
 	private int unit;

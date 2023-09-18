@@ -1,18 +1,18 @@
-### 1. user 등록
+### 1-1. user 등록
 POST {{gateway-url}}/api/user/sign-up
 Content-Type: application/json
 
 {
-  "email": "yhj7124@naver.com",
+  "email": "yhj7124@google.com",
   "password": "test1234",
   "name": "abc",
-  "phone": "01099157124",
+  "phone": "01087654321",
   "apartmentCode": "A12345678",
   "building": 101,
   "unit": 101
 }
 
-### 2. user 로그인
+### 1-2. user 로그인
 POST {{gateway-url}}/api/user/login
 Content-Type: application/json
 
@@ -21,12 +21,28 @@ Content-Type: application/json
   "password": "test1234"
 }
 
-### 3. user 정보
+### 1-3. user 정보
 GET {{gateway-url}}/api/user/
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDEyMDEwLCJleHAiOjE2OTQ0OTg0MTB9.nHkIukOg6dybYk_AqqkH8I8wUNZtKvhtU-hyNQli63cFpZxL4zJ3S_FDSoNiq0W4lXl_PDfAtBhFEBIszdrVGg
 
-### 4. user 목록
+### 1-4. user 목록
 GET {{gateway-url}}/api/user/1,2,3
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDEyMDEwLCJleHAiOjE2OTQ0OTg0MTB9.nHkIukOg6dybYk_AqqkH8I8wUNZtKvhtU-hyNQli63cFpZxL4zJ3S_FDSoNiq0W4lXl_PDfAtBhFEBIszdrVGg
+
+
+### 2-1. userRoleToken 생성
+POST {{gateway-url}}/api/user/role/token
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NzU2Mjg4LCJleHAiOjE2OTQ4NDI2ODh9.AiH1kyxcschSsLies7qtlWSF-lHntTK1GS13Iv-ctkFhRfEBtdPmNXivnp8ef7N_NdkYHp6uom7AWnu_DdmGYA
+
+{
+  "apartmentCode": "A12345678",
+  "userRole": "LEADER"
+}
+
+### 2-2. token 으로 user role 변경
+POST {{gateway-url}}/api/user/role/change/d3792b57-481b-4ced-9268-3fbc5f
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5aGo3MTI0QGdvb2dsZS5jb20iLCJyb2xlcyI6WyJVTlJFR0lTVEVSRUQiXSwiaWF0IjoxNjk0NzU1ODYwLCJleHAiOjE2OTQ4NDIyNjB9.6crd81WmPaNUBkgTsrTKQks8gQ2lCMCxv_z0NcUluVR85IO8xQmbQ4oBjiQkJ_CzflZUj1Til3-YO22yF_ZjSQ
