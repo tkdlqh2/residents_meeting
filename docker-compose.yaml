@@ -1,5 +1,16 @@
 version: "3.8"
 services:
+  my-sql:
+    image: mysql:8.0
+    ports:
+      - '13306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: zerobase
+      TZ: Asia/Seoul
+    volumes:
+      - ./db/mysql/data:/var/lib/mysql
+      - ./db/mysql/init:/docker-entrypoint-initdb.d
+
   eureka-server:
     build: .
     ports:
@@ -14,16 +25,30 @@ services:
     build: ./api_gateway
     ports:
       - '8000:8000'
+    environment:
+      SPRING_PROFILES_ACTIVE: compose
+    depends_on:
+      - config-server
 
   user:
     build: ./user_service
     ports:
       - '8080:8080'
+    environment:
+      SPRING_PROFILES_ACTIVE: compose
+    depends_on:
+      - my-sql
+      - api-gateway
 
   vote:
     build: ./vote_service
     ports:
       - '8081:8081'
+    environment:
+      SPRING_PROFILES_ACTIVE: compose
+    depends_on:
+      - my-sql
+      - api-gateway
 
 #  mongodb:
 #    image: 'mongo'

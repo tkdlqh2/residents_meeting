@@ -1,5 +1,4 @@
 FROM eclipse-temurin:17-jdk-alpine
 COPY build/libs/api_gateway-1.0.jar /app.jar
-ENV	USE_PROFILE compose
 
-ENTRYPOINT ["java","-Dspring.profiles.active=${USE_PROFILE}","-jar","/app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]

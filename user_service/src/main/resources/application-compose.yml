@@ -3,7 +3,7 @@ spring:
     name: user-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/resident
+    url: jdbc:mysql://my-sql:3306/resident
     username: root
     password: zerobase
     h2:
@@ -26,7 +26,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://host.docker.internal:8761/eureka
+      defaultZone: http://eureka-server:8761/eureka
 
 management:
   endpoints:
