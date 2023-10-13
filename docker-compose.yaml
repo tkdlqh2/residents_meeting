@@ -1,0 +1,67 @@
+version: "3.8"
+services:
+  eureka-server:
+    build: .
+    ports:
+      - '8761:8761'
+
+  config-server:
+    build: ./config
+    ports:
+      - '8888:8888'
+
+  api-gateway:
+    build: ./api_gateway
+    ports:
+      - '8000:8000'
+
+  user:
+    build: ./user_service
+    ports:
+      - '8080:8080'
+
+  vote:
+    build: ./vote_service
+    ports:
+      - '8081:8081'
+
+#  mongodb:
+#    image: 'mongo'
+#    volumes:
+#      - data:/data/db
+#    environment:
+#       MONGO_INITDB_ROOT_USERNAME: max
+#       MONGO_INITDB_ROOT_PASSWORD: secret
+#    env_file:
+#      - ./env/mongo.env
+#  backend:
+##    build: ./backend
+#    build:
+#       context: ./backend
+#       dockerfile: Dockerfile
+#       args:
+#         some-arg: 1
+#    ports:
+#      - '80:80'
+#    volumes:
+#      - logs:/app/logs
+#      - ./backend:/app
+#      - /app/node_modules
+#    env_file:
+#      - ./env/backend.env
+#    depends_on:
+#      - mongodb
+#  frontend:
+#    build: ./frontend
+#    ports:
+#      - '3000:3000'
+#    volumes:
+#      - ./frontend/src:/app/src
+#    stdin_open: true
+#    tty: true
+#    depends_on:
+#      - backend
+#
+#volumes:
+#  data:
+#  logs:
