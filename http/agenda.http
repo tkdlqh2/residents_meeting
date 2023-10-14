@@ -2,7 +2,7 @@
 ### 1. 안건 생성
 POST {{gateway-url}}/api/agenda/
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDM1MDY4LCJleHAiOjE2OTQ1MjE0Njh9.sPj_B33wAXrEbtwYql-PbjwbMXDe_GY2ZQPyEgwp_ndAh-IKmqZL8aG37a4imsDIZ98VsRUrbyVEqqRutr3xqQ
+Authorization:eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5aGo3MTI0QG5hdmVyLmNvbSIsInJvbGVzIjpbIkxFQURFUiJdLCJpYXQiOjE2OTcyOTk5OTQsImV4cCI6MTY5NzM4NjM5NH0.QM8Ck8vmTJLJlTu42Rwzac7rMEu568Jj49govrRDwYwb06xbj_dlOcxd9wN7k5ZvdFfuI3wG8ETMIFLlF7NxCA
 
 {
   "title": "제목",
@@ -24,4 +24,4 @@ Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsi
 ### 2. 안건 조회
 GET {{gateway-url}}/api/agenda/1
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDM1MDY4LCJleHAiOjE2OTQ1MjE0Njh9.sPj_B33wAXrEbtwYql-PbjwbMXDe_GY2ZQPyEgwp_ndAh-IKmqZL8aG37a4imsDIZ98VsRUrbyVEqqRutr3xqQ
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5aGo3MTI0QG5hdmVyLmNvbSIsInJvbGVzIjpbIkxFQURFUiJdLCJpYXQiOjE2OTcyOTk5OTQsImV4cCI6MTY5NzM4NjM5NH0.QM8Ck8vmTJLJlTu42Rwzac7rMEu568Jj49govrRDwYwb06xbj_dlOcxd9wN7k5ZvdFfuI3wG8ETMIFLlF7NxCA

@@ -15,6 +15,8 @@ import java.time.ZonedDateTime;
 public class AgendaHistoryCustomRepositoryImpl implements AgendaHistoryCustomRepository {
 
 	private final DatabaseClient databaseClient;
+
+	//TODO : 결과가 없을 때 null 반환
 	@Override
 	public Mono<AgendaHistory> findById(Long id) {
 

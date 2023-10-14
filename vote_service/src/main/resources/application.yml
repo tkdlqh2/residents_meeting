@@ -22,13 +22,15 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://host.docker.internal:8761/eureka
+      defaultZone: http://localhost:8761/eureka
 
 management:
   endpoints:
     web:
       exposure:
         include: refresh, health, beans
+
+user-service-url: http://localhost:8080
 
 event:
   delay: 5

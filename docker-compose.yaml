@@ -1,15 +1,40 @@
 version: "3.8"
 services:
   my-sql:
-    image: mysql:8.0
+    build:
+      context: .
+      dockerfile: Dockerfile-MySql
     ports:
       - '13306:3306'
-    environment:
-      MYSQL_ROOT_PASSWORD: zerobase
-      TZ: Asia/Seoul
     volumes:
-      - ./db/mysql/data:/var/lib/mysql
-      - ./db/mysql/init:/docker-entrypoint-initdb.d
+      - data:/var/lib/mysql
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+    ports:
+      - "22181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
 
   eureka-server:
     build: .
@@ -49,44 +74,16 @@ services:
     depends_on:
       - my-sql
       - api-gateway
+      - kafka
 
-#  mongodb:
-#    image: 'mongo'
-#    volumes:
-#      - data:/data/db
-#    environment:
-#       MONGO_INITDB_ROOT_USERNAME: max
-#       MONGO_INITDB_ROOT_PASSWORD: secret
-#    env_file:
-#      - ./env/mongo.env
-#  backend:
-##    build: ./backend
-#    build:
-#       context: ./backend
-#       dockerfile: Dockerfile
-#       args:
-#         some-arg: 1
-#    ports:
-#      - '80:80'
-#    volumes:
-#      - logs:/app/logs
-#      - ./backend:/app
-#      - /app/node_modules
-#    env_file:
-#      - ./env/backend.env
-#    depends_on:
-#      - mongodb
-#  frontend:
-#    build: ./frontend
-#    ports:
-#      - '3000:3000'
-#    volumes:
-#      - ./frontend/src:/app/src
-#    stdin_open: true
-#    tty: true
-#    depends_on:
-#      - backend
-#
-#volumes:
-#  data:
-#  logs:
+  schedule-consumer:
+    build: ./scheduler_and_consumer
+    ports:
+      - '8086:8086'
+    environment:
+      SPRING_PROFILES_ACTIVE: compose
+    depends_on:
+      - vote
+
+volumes:
+  data:

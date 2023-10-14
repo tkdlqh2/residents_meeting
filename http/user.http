@@ -3,10 +3,10 @@ POST {{gateway-url}}/api/user/sign-up
 Content-Type: application/json
 
 {
-  "email": "yhj7124@google.com",
+  "email": "yhj7124@naver.com",
   "password": "test1234",
   "name": "abc",
-  "phone": "01087654321",
+  "phone": "01012345678",
   "apartmentCode": "A12345678",
   "building": 101,
   "unit": 101
@@ -17,25 +17,25 @@ POST {{gateway-url}}/api/user/login
 Content-Type: application/json
 
 {
-  "email": "abc@gmail.com",
+  "email": "yhj7124@naver.com",
   "password": "test1234"
 }
 
 ### 1-3. user 정보
 GET {{gateway-url}}/api/user/
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDEyMDEwLCJleHAiOjE2OTQ0OTg0MTB9.nHkIukOg6dybYk_AqqkH8I8wUNZtKvhtU-hyNQli63cFpZxL4zJ3S_FDSoNiq0W4lXl_PDfAtBhFEBIszdrVGg
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5aGo3MTI0QGdvb2dsZS5jb20iLCJyb2xlcyI6WyJVTlJFR0lTVEVSRUQiXSwiaWF0IjoxNjk3Mjk5MDc0LCJleHAiOjE2OTczODU0NzR9.ZrjL_KJTcHOr_45nT32aGNmhD8syjVroX29zQj39G9hKlcAykxzS348_UJRkPPxBRp-BtKSax3dbjPOI7XqxGg
 
 ### 1-4. user 목록
 GET {{gateway-url}}/api/user/1,2,3
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDEyMDEwLCJleHAiOjE2OTQ0OTg0MTB9.nHkIukOg6dybYk_AqqkH8I8wUNZtKvhtU-hyNQli63cFpZxL4zJ3S_FDSoNiq0W4lXl_PDfAtBhFEBIszdrVGg
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5aGo3MTI0QGdvb2dsZS5jb20iLCJyb2xlcyI6WyJVTlJFR0lTVEVSRUQiXSwiaWF0IjoxNjk3Mjk5MDc0LCJleHAiOjE2OTczODU0NzR9.ZrjL_KJTcHOr_45nT32aGNmhD8syjVroX29zQj39G9hKlcAykxzS348_UJRkPPxBRp-BtKSax3dbjPOI7XqxGg
 
 
 ### 2-1. userRoleToken 생성
 POST {{gateway-url}}/api/user/role/token
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NzU2Mjg4LCJleHAiOjE2OTQ4NDI2ODh9.AiH1kyxcschSsLies7qtlWSF-lHntTK1GS13Iv-ctkFhRfEBtdPmNXivnp8ef7N_NdkYHp6uom7AWnu_DdmGYA
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5aGo3MTI0QGdvb2dsZS5jb20iLCJyb2xlcyI6WyJVTlJFR0lTVEVSRUQiXSwiaWF0IjoxNjk3Mjk5MDc0LCJleHAiOjE2OTczODU0NzR9.ZrjL_KJTcHOr_45nT32aGNmhD8syjVroX29zQj39G9hKlcAykxzS348_UJRkPPxBRp-BtKSax3dbjPOI7XqxGg
 
 {
   "apartmentCode": "A12345678",
@@ -43,6 +43,6 @@ Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsi
 }
 
 ### 2-2. token 으로 user role 변경
-POST {{gateway-url}}/api/user/role/change/d3792b57-481b-4ced-9268-3fbc5f
+POST {{gateway-url}}/api/user/role/change/f14f2fb4-e4e7-4b59-9735-0b483a
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5aGo3MTI0QGdvb2dsZS5jb20iLCJyb2xlcyI6WyJVTlJFR0lTVEVSRUQiXSwiaWF0IjoxNjk0NzU1ODYwLCJleHAiOjE2OTQ4NDIyNjB9.6crd81WmPaNUBkgTsrTKQks8gQ2lCMCxv_z0NcUluVR85IO8xQmbQ4oBjiQkJ_CzflZUj1Til3-YO22yF_ZjSQ
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5aGo3MTI0QG5hdmVyLmNvbSIsInJvbGVzIjpbIlVOUkVHSVNURVJFRCJdLCJpYXQiOjE2OTcyOTkyNjksImV4cCI6MTY5NzM4NTY2OX0.q-r1ApvSskKG5xnNBJuY8PclOurno4u3qZnvjbswfzOItx8HTNNIu-SOuRRnYdrrJRZeCOxMndHWbuSI1nUQag
