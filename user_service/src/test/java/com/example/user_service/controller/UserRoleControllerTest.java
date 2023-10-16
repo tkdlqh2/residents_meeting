@@ -77,8 +77,6 @@ class UserRoleControllerTest {
 										UserRole.MEMBER)
 						)).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
-//				.andExpect(jsonPath("$.email").value("abc@gmail.com"))
-//				.andExpect(jsonPath("$.name").value("홍길동"))
 				.andDo(print());
 	}
 

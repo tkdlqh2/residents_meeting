@@ -2,12 +2,12 @@
 ### 1. 안건 생성
 POST {{gateway-url}}/api/agenda/
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDM1MDY4LCJleHAiOjE2OTQ1MjE0Njh9.sPj_B33wAXrEbtwYql-PbjwbMXDe_GY2ZQPyEgwp_ndAh-IKmqZL8aG37a4imsDIZ98VsRUrbyVEqqRutr3xqQ
+Authorization:eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAbmF2ZXIuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5NzQzODI1MCwiZXhwIjoxNjk3NTI0NjUwfQ.bwjsDTs4gnCdvy5ccl2ESWh4_hCwX7UXCS-fU6fltQVu-T_gQHFNvAPTWItY8MJ2cuYTLWvKJm5VSWseUMDLQg
 
 {
   "title": "제목",
   "details": "설명",
-  "endDate": "2023-10-02",
+  "endDate": "2023-10-31",
   "secret": false,
   "selectOptionCreationDtoList": [
     {
@@ -22,6 +22,6 @@ Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsi
 }
 
 ### 2. 안건 조회
-GET {{gateway-url}}/api/agenda/1
+GET {{gateway-url}}/api/agenda/22
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNjk0NDM1MDY4LCJleHAiOjE2OTQ1MjE0Njh9.sPj_B33wAXrEbtwYql-PbjwbMXDe_GY2ZQPyEgwp_ndAh-IKmqZL8aG37a4imsDIZ98VsRUrbyVEqqRutr3xqQ
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAbmF2ZXIuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5NzQzODI1MCwiZXhwIjoxNjk3NTI0NjUwfQ.bwjsDTs4gnCdvy5ccl2ESWh4_hCwX7UXCS-fU6fltQVu-T_gQHFNvAPTWItY8MJ2cuYTLWvKJm5VSWseUMDLQg

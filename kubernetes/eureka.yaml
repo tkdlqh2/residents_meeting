@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka-service
+spec:
+  selector:
+    app: eureka
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8761
+      targetPort: 8761
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eureka-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eureka
+  template:
+    metadata:
+      labels:
+        app: eureka
+    spec:
+      containers:
+        - name: eureka
+          image: tkdlqh2/residents-meeting-eureka:latest
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: 'prod'
+            - name: eureka.instance.prefer-ip-address
+              value: 'true'

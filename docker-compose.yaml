@@ -1,0 +1,89 @@
+version: "3.8"
+services:
+  my-sql:
+    build:
+      context: .
+      dockerfile: Dockerfile-MySql
+    ports:
+      - '13306:3306'
+    volumes:
+      - data:/var/lib/mysql
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+    ports:
+      - "22181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+  eureka-server:
+    build: .
+    ports:
+      - '8761:8761'
+
+  config-server:
+    build: ./config
+    ports:
+      - '8888:8888'
+
+  api-gateway:
+    build: ./api_gateway
+    ports:
+      - '8000:8000'
+    environment:
+      SPRING_PROFILES_ACTIVE: compose
+    depends_on:
+      - config-server
+
+  user:
+    build: ./user_service
+    ports:
+      - '8080:8080'
+    environment:
+      SPRING_PROFILES_ACTIVE: compose
+    depends_on:
+      - my-sql
+      - api-gateway
+
+  vote:
+    build: ./vote_service
+    ports:
+      - '8081:8081'
+    environment:
+      SPRING_PROFILES_ACTIVE: compose
+    depends_on:
+      - my-sql
+      - api-gateway
+      - kafka
+
+  schedule-consumer:
+    build: ./scheduler_and_consumer
+    ports:
+      - '8086:8086'
+    environment:
+      SPRING_PROFILES_ACTIVE: compose
+    depends_on:
+      - vote
+
+volumes:
+  data:

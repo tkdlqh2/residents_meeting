@@ -5,7 +5,7 @@ spring:
   application:
     name: vote-service
   r2dbc:
-    url: r2dbc:mysql://127.0.0.1:3306/resident?useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: r2dbc:mysql://mysql-service:3306/resident?useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: zerobase
     pool:
@@ -13,7 +13,7 @@ spring:
       validation-query: SELECT 1
 
   kafka:
-    bootstrap-servers: http://127.0.0.1:9092
+    bootstrap-servers: http://kafka-service:9092
 
 eureka:
   instance:
@@ -22,7 +22,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://eureka-service:8761/eureka
 
 management:
   endpoints:
@@ -30,7 +30,8 @@ management:
       exposure:
         include: refresh, health, beans
 
-user-service-url: http://localhost:8080
+user-service-url: http://user-service:8080
+
 
 event:
   delay: 5
