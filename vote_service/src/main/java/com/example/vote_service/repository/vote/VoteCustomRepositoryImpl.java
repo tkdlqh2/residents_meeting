@@ -23,7 +23,7 @@ public class VoteCustomRepositoryImpl implements VoteCustomRepository {
 
 		String sql = """ 
 			SELECT s.id as id, v.created_at as createdTime
-			FROM Vote as v
+			FROM vote as v
 				INNER JOIN select_option s ON v.select_option_id = s.id
 			WHERE s.agenda_id = :agendaId
 				AND v.user_id = :userId
@@ -45,10 +45,10 @@ public class VoteCustomRepositoryImpl implements VoteCustomRepository {
 
 		String sql = """
 			SELECT count(v.user_id) as voteCount
-			FROM Vote as v
+			FROM vote as v
 			WHERE (v.user_id, v.created_at) IN (
 				SELECT v2.user_id, MAX(v2.created_at)
-				FROM Vote v2
+				FROM vote v2
 				WHERE v2.select_option_id IN (
 					SELECT s.id FROM select_option s 
 					WHERE s.agenda_id = (SELECT s2.agenda_id from select_option s2 
@@ -72,10 +72,10 @@ public class VoteCustomRepositoryImpl implements VoteCustomRepository {
 
 		String sql = """
 			SELECT v.user_id as userId
-			FROM Vote as v
+			FROM vote as v
 			WHERE (v.user_id, v.created_at) IN (
 				SELECT v2.user_id, MAX(v2.created_at)
-				FROM Vote v2
+				FROM vote v2
 				WHERE v2.select_option_id IN (
 					SELECT s.id FROM select_option s 
 					WHERE s.agenda_id = (SELECT s2.agenda_id from select_option as s2 

@@ -3,11 +3,11 @@ POST {{gateway-url}}/api/user/sign-up
 Content-Type: application/json
 
 {
-  "email": "yhj7124@naver.com",
+  "email": "abc@naver.com",
   "password": "test1234",
   "name": "abc",
-  "phone": "01012345678",
-  "apartmentCode": "A12345678",
+  "phone": "01011111113",
+  "apartmentCode": "A87654321",
   "building": 101,
   "unit": 101
 }
@@ -17,19 +17,19 @@ POST {{gateway-url}}/api/user/login
 Content-Type: application/json
 
 {
-  "email": "yhj7124@naver.com",
+  "email": "abc@naver.com",
   "password": "test1234"
 }
 
 ### 1-3. user 정보
 GET {{gateway-url}}/api/user/
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5aGo3MTI0QGdvb2dsZS5jb20iLCJyb2xlcyI6WyJVTlJFR0lTVEVSRUQiXSwiaWF0IjoxNjk3Mjk5MDc0LCJleHAiOjE2OTczODU0NzR9.ZrjL_KJTcHOr_45nT32aGNmhD8syjVroX29zQj39G9hKlcAykxzS348_UJRkPPxBRp-BtKSax3dbjPOI7XqxGg
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAbmF2ZXIuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5NzQzODI1MCwiZXhwIjoxNjk3NTI0NjUwfQ.bwjsDTs4gnCdvy5ccl2ESWh4_hCwX7UXCS-fU6fltQVu-T_gQHFNvAPTWItY8MJ2cuYTLWvKJm5VSWseUMDLQg
 
 ### 1-4. user 목록
-GET {{gateway-url}}/api/user/1,2,3
+GET {{gateway-url}}/api/user/6,7,8
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5aGo3MTI0QGdvb2dsZS5jb20iLCJyb2xlcyI6WyJVTlJFR0lTVEVSRUQiXSwiaWF0IjoxNjk3Mjk5MDc0LCJleHAiOjE2OTczODU0NzR9.ZrjL_KJTcHOr_45nT32aGNmhD8syjVroX29zQj39G9hKlcAykxzS348_UJRkPPxBRp-BtKSax3dbjPOI7XqxGg
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAbmF2ZXIuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5NzQzODI1MCwiZXhwIjoxNjk3NTI0NjUwfQ.bwjsDTs4gnCdvy5ccl2ESWh4_hCwX7UXCS-fU6fltQVu-T_gQHFNvAPTWItY8MJ2cuYTLWvKJm5VSWseUMDLQg
 
 
 ### 2-1. userRoleToken 생성
@@ -43,6 +43,6 @@ Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5aGo3MTI0QGdvb2dsZS5jb20iLCJyb2xl
 }
 
 ### 2-2. token 으로 user role 변경
-POST {{gateway-url}}/api/user/role/change/f14f2fb4-e4e7-4b59-9735-0b483a
+POST {{gateway-url}}/api/user/role/change/87169d5c-23ad-4734-8847-5f1b9b
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5aGo3MTI0QG5hdmVyLmNvbSIsInJvbGVzIjpbIlVOUkVHSVNURVJFRCJdLCJpYXQiOjE2OTcyOTkyNjksImV4cCI6MTY5NzM4NTY2OX0.q-r1ApvSskKG5xnNBJuY8PclOurno4u3qZnvjbswfzOItx8HTNNIu-SOuRRnYdrrJRZeCOxMndHWbuSI1nUQag
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAbmF2ZXIuY29tIiwicm9sZXMiOlsiVU5SRUdJU1RFUkVEIl0sImlhdCI6MTY5NzQzODI1MCwiZXhwIjoxNjk3NTI0NjUwfQ.bwjsDTs4gnCdvy5ccl2ESWh4_hCwX7UXCS-fU6fltQVu-T_gQHFNvAPTWItY8MJ2cuYTLWvKJm5VSWseUMDLQg

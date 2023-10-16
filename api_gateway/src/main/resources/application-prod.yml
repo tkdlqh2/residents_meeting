@@ -1,0 +1,64 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+        defaultZone: http://eureka-service:8761/eureka
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/user/sign-up
+            - Method=POST
+
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/user/login
+            - Method=POST
+
+        - id: user-service
+          uri: lb://USER-SERVICE/actuator/**
+          predicates:
+            - Path=/api/user/actuator/**
+            - Method=GET,POST
+          filters:
+            - RewritePath=/api/user/(?<segment>.*), /$\{segment}
+
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - AuthorizationHeaderFilter
+
+        - id: vote-service
+          uri: lb://VOTE-SERVICE
+          predicates:
+            - Path=/api/vote/actuator/**, /api/agenda/actuator/**
+            - Method=GET,POST
+          filters:
+            - RewritePath=/api/vote/(?<segment>.*), /$\{segment}
+
+        - id: vote-service
+          uri: lb://VOTE-SERVICE
+          predicates:
+            - Path=/api/vote/**, /api/agenda/**
+          filters:
+            - AuthorizationHeaderFilter
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, httptrace

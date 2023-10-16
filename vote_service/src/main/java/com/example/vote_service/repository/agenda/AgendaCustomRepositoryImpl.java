@@ -24,7 +24,7 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
 		String sql = """
 				SELECT a.id AS agendaId, a.apartment_code AS apartmentCode, a.title AS agendaTitle, 
     			a.details AS agendaDetails, a.end_date AS agendaEndDate, a.secret as agendaSecret, a.created_at AS agendaCreatedAt
-				FROM Agenda a 
+				FROM agenda a 
 				WHERE a.id = :id
 				""";
 
@@ -51,7 +51,7 @@ public class AgendaCustomRepositoryImpl implements AgendaCustomRepository {
     			a.details AS agendaDetails, a.end_date AS agendaEndDate, a.secret as agendaSecret, a.created_at AS agendaCreatedTime,
     			s.id AS selectOptionId, s.summary AS selectOptionSummary,
     			s.details AS selectOptionDetails
-				FROM Agenda a 
+				FROM agenda a 
 				JOIN select_option s
 				ON a.id = s.agenda_id
 				WHERE a.id = :id
